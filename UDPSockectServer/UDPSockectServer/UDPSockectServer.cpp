@@ -1,6 +1,9 @@
 #include "Network.h"
 #include "iostream"
+#include <vector>
 
+
+using namespace std;
 #pragma once
 
 int main()
@@ -14,16 +17,30 @@ int main()
         UDPSocket Socket;
         std::string data = "hello world";
         char buffer[100];
+
+
+        vector<sockaddr_in> client;
+       
         Socket.Bind(PORT);
         while (1)
         {
             std::cout << "Data Transmitted: ";
-            sockaddr_in client = Socket.RecvFrom(buffer, sizeof(buffer));
-            std::cout << buffer << std::endl;
+
+
             
+            //how to get multiple clients?
+            //loop until
+            sockaddr_in temp = Socket.RecvFrom(buffer, sizeof(buffer));
+
+            //client.push_back(temp);
+
+            std::cout << buffer << std::endl;            
             std::cout << "Enter data to transmit : " << std::endl;
+
+
+
             std::getline(std::cin, data);
-            Socket.SendTo(client, data.c_str(), data.size());
+            Socket.SendTo(temp, data.c_str(), data.size());
           
         }
     }

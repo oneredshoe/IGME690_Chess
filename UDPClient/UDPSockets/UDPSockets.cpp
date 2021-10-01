@@ -21,6 +21,8 @@ int main()
             std::cout << "Enter data to transmit : " << std::endl;
             std::getline(std::cin, data);
             Socket.SendTo(IP, PORT, data.c_str(), data.size());
+            Socket.RecvFrom(buffer, sizeof(buffer));
+            std::cout << buffer << std::endl;
 
         }
 
