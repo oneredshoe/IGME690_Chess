@@ -20,6 +20,13 @@ int main()
 
 
         vector<sockaddr_in> client;
+        // i wonder if any other data strcuture will work. 
+        //  maybe the clients can just send requests for updates every so often?
+        // Also, for the board, each client should have the board on their end
+        // the server should only recieve moves, update it's matrix, and send that back
+
+        // clients should have the board and the game - the client can determine if the move is legal
+        //  -> does this make it hella easy to cheat? Maybe.....
        
         Socket.Bind(PORT);
         while (1)
