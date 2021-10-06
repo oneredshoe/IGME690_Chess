@@ -8,22 +8,67 @@ int main()
     std::string IP = "127.0.0.1";
     int PORT = 8888;
     bool gameInPlay = true;
+    bool isMyTurn;
 
     try
     {
         WSASession Session;
         UDPSocket Socket;
-        std::string data = "hello world";
+        std::string data = "I would like to play";
         char buffer[100];
+        char id;
+
+        // telling the server I want to play the game
+        Socket.SendTo(IP, PORT, data.c_str(), data.size());
+
+        // waits for the server to telll me if I'm white or black
+        Socket.RecvFrom(buffer, sizeof(buffer));
+
+        // 0 if white, 1 if black
+        if (buffer[0] == '0')
+        {
+            isMyTurn = true;
+            id = '0';
+            std::cout << "I go first" << std::endl;
+        }
+        else
+        {
+            isMyTurn = false;
+            id = '1';
+            std::cout << "I go second" << std::endl;
+        }
         
         while (1)
         {
-            std::cout << "Enter data to transmit : " << std::endl;
-            std::getline(std::cin, data);
-            Socket.SendTo(IP, PORT, data.c_str(), data.size());
-            Socket.RecvFrom(buffer, sizeof(buffer));
-            std::cout << buffer << std::endl;
+            // if it's not my turn yet, I wait for the server
+            // to tell me what happens
+            // after the server tells me what happens
+            // its my turn and i can send my move
+            if (isMyTurn == false)
+            {
+                Socket.RecvFrom(buffer, sizeof(buffer));
 
+                // sends the board the update from the server
+                std::cout << buffer << std::endl;
+
+                isMyTurn = true;
+            }
+
+            // i don't /think/ i need this but liiiiiiike
+            if (isMyTurn == true)
+            {
+                // it is now my turn and i get data that is my move
+                std::cout << "Enter data to transmit : " << std::endl;
+                std::getline(std::cin, data);
+                data = id + data;
+
+                // when it is my turn, i send my move to the server
+                Socket.SendTo(IP, PORT, data.c_str(), data.size());
+                isMyTurn = false;
+            }
+
+            // because we wait at the start of the loop we /shouldnt/ need this
+            // Socket.RecvFrom(buffer, sizeof(buffer));
         }
 
 
