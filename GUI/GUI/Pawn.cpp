@@ -24,7 +24,7 @@ class Pawn: public Piece
 {
 public:
 	Pawn(int x, int y, bool isBlack);
-	bool Move(int* position, int board[8][8]) override; 
+	bool Move(int position[], int board[8][8]) override; 
 	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
 
 private:
@@ -35,11 +35,12 @@ Pawn::Pawn(int x, int y, bool isBlack) : Piece(PAWN, x, y, isBlack){
 	m_hasMoved = false;
 }
 
-bool Pawn::Move(int* position, int board[8][8]) {
+bool Pawn::Move(int position[], int board[8][8]) {
 	vector <array<int, 2>> check = PossibleMoves(board);
 
 	for (array<int, 2> possibility : check) {
 		if (position[0] == possibility[0] && position[1] == possibility[1]) {
+			m_hasMoved = true;
 			return true;
 		}
 	}

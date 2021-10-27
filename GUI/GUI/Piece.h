@@ -53,4 +53,16 @@ int* Piece::getPosition() {
 bool Piece::isBlack() {
 	return m_isBlack;
 }
+
+bool Piece::Move(int position[], int board[8][8]) {
+	vector <array<int, 2>> check = PossibleMoves(board);
+
+	for (array<int, 2> possibility : check) {
+		if (position[0] == possibility[0] && position[1] == possibility[1]) {
+			return true;
+		}
+	}
+
+	return false;
+}
 #endif // !PIECE_H
