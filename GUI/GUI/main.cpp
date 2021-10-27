@@ -1,4 +1,6 @@
+#define SFML_STATIC
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include "Board.h"
 
 
