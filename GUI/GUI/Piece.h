@@ -20,7 +20,7 @@ public:
 	bool isBlack();
 
 	virtual bool Move(int position[], int board[8][8]);
-	virtual vector<int*>PossibleMoves(int board[8][8]);
+	virtual vector< array<int, 2>>PossibleMoves(int board[8][8]);
 	
 protected:
 	PieceType m_name;
