@@ -20,13 +20,6 @@ int main()
 
 
         vector<sockaddr_in> clients;
-        // i wonder if any other data strcuture will work. 
-        //  maybe the clients can just send requests for updates every so often?
-        // Also, for the board, each client should have the board on their end
-        // the server should only recieve moves, update it's matrix, and send that back
-
-        // clients should have the board and the game - the client can determine if the move is legal
-        //  -> does this make it hella easy to cheat? Maybe.....
        
         Socket.Bind(PORT);
 
@@ -34,6 +27,8 @@ int main()
         int white;
         int black;
         int currentPlayer = 0; 
+
+        bool validMove;
 
         while (1)
         {
@@ -83,24 +78,44 @@ int main()
             // this is white's move
             if (buffer[0] == '0')
             {
-                // this will be replaced with the board updates
-                // std::cout << "Enter data to transmit : " << std::endl;
-                // std::getline(std::cin, data);
-                data = buffer;
-                data = "They played: " + data;
+                // if white played a valid move, just send it to black
+                if (validMove == true)
+                {
+                    // this will be replaced with the board updates
+                    // std::cout << "Enter data to transmit : " << std::endl;
+                    // std::getline(std::cin, data);
+                    data = buffer;
+                    data = "They played: " + data;
 
-                Socket.SendTo(clients[1], data.c_str(), data.size());
+                    Socket.SendTo(clients[1], data.c_str(), data.size());
+                }
+                // if white played an invalid move, tell them
+                else
+                {
+                    data = "invalid";
+                    Socket.SendTo(clients[0], data.c_str(), data.size());
+                }
             }
             // this is black's moev
             else if (buffer[0] == '1')
             {
-                // this will be replaced with the board updates
-                // std::cout << "Enter data to transmit : " << std::endl;
-                // std::getline(std::cin, data);
-                data = buffer;
-                data = "They played: " + data;
+                // if black played a valid move, just send it to white
+                if (validMove)
+                {
+                    // this will be replaced with the board updates
+                    // std::cout << "Enter data to transmit : " << std::endl;
+                    // std::getline(std::cin, data);
+                    data = buffer;
+                    data = "They played: " + data;
 
-                Socket.SendTo(clients[0], data.c_str(), data.size());
+                    Socket.SendTo(clients[0], data.c_str(), data.size());
+                }
+                // if black played an invalid move, tell them
+                else
+                {
+                    data = "invalid";
+                    Socket.SendTo(clients[1], data.c_str(), data.size());
+                }
             }
             // no on'es move, should never reach this
             else

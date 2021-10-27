@@ -48,10 +48,28 @@ int main()
             {
                 Socket.RecvFrom(buffer, sizeof(buffer));
 
-                // sends the board the update from the server
-                std::cout << buffer << std::endl;
+                if (buffer == "invalid")
+                {
+                    // I played an invalid move, and need to play another
+                    // get data from UI
+                    std::cout << "Enter data to transmit : " << std::endl;
+                    std::getline(std::cin, data);
 
-                isMyTurn = true;
+                    // append my ID
+                    data = id + data;
+
+                    // send my move
+                    Socket.SendTo(IP, PORT, data.c_str(), data.size());
+                    isMyTurn = false;
+                }
+                else
+                {
+                    // sends the board the update from the server
+                    // here I need to update my local board
+                    std::cout << buffer << std::endl;
+
+                    isMyTurn = true;
+                }
             }
 
             // i don't /think/ i need this but liiiiiiike
