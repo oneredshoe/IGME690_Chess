@@ -1,5 +1,8 @@
-#pragma once
+#ifndef BOARD_H
+#define BOARD_H
+
 #include <SFML/Graphics.hpp>
+
 
 class Board {
 public:
@@ -39,6 +42,7 @@ void Board::SetUp() {
             isBlack = !isBlack;
 
             m_board[i][j].setPosition(sf::Vector2f(i * m_squareSize, j * m_squareSize));
+            m_occupations[i][j] = NONE;
         }
 
         isBlack = !isBlack;
@@ -53,3 +57,4 @@ void Board::Draw() {
     }
 }
 
+#endif // !BOARD_H
