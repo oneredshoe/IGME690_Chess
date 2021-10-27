@@ -76,6 +76,11 @@ int main()
             sockaddr_in temp = Socket.RecvFrom(buffer, sizeof(buffer));
             std::cout << buffer << std::endl;
 
+            // here instead of just putting it into the buffer, I go and validate moves
+            // if the move is valid, I just send it to the next player and we're good
+            // if not, I have to tell the user it's invalid, and ask for another one
+
+            // this is white's move
             if (buffer[0] == '0')
             {
                 // this will be replaced with the board updates
@@ -86,6 +91,7 @@ int main()
 
                 Socket.SendTo(clients[1], data.c_str(), data.size());
             }
+            // this is black's moev
             else if (buffer[0] == '1')
             {
                 // this will be replaced with the board updates
@@ -96,6 +102,7 @@ int main()
 
                 Socket.SendTo(clients[0], data.c_str(), data.size());
             }
+            // no on'es move, should never reach this
             else
             {
                 // wha happuh?
