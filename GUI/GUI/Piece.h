@@ -19,14 +19,13 @@ public:
 	int* getPosition();
 	bool isBlack();
 
-	virtual bool Move(int position[]);
-	virtual vector<int*>PossibleMoves();
+	virtual bool Move(int position[], int board[8][8]);
+	virtual vector<int*>PossibleMoves(int board[8][8]);
 	
 protected:
 	PieceType m_name;
 	int m_position[2]{0, 0};
 	bool m_isBlack;
-	Board& m_board;
 };
 
 Piece::Piece(PieceType name, int x, int y, bool isBlack )
