@@ -1,6 +1,7 @@
 #include "Piece.h"
 
 class Horse : public Piece {
+public:
 	Horse(int x, int y, bool isBlack);
 	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
 };

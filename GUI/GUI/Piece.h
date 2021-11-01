@@ -25,7 +25,7 @@ a empty square is denotd as 2
 
 using namespace std;
 
-enum PieceType { HORSE, CASTLE, BISHOP, PAWN, KING, QUEEN };
+enum PieceType { HORSE, CASTLE, BISHOP, PAWN, KING, QUEEN, NONE };
 
 enum Letters {A = 0, B = 1, C = 2, D = 3, E = 4, F = 5, G = 6, H = 7};
 
