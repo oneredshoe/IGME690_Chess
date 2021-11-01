@@ -76,6 +76,8 @@ int main()
             // if not, I have to tell the user it's invalid, and ask for another one
 
             // check for valid move here
+            // if piece at the start location == true, it's valid. if false, invalid;
+            // can just call validMove = piece at start location.Move();
 
             // this is white's move
             if (buffer[0] == '0')
