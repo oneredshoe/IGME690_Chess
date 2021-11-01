@@ -19,6 +19,8 @@ public:
 	int* getPosition();
 	bool isBlack();
 
+	
+
 	virtual bool Move(int position[], int board[8][8]);
 	virtual vector< array<int, 2>>PossibleMoves(int board[8][8]);
 	
@@ -26,6 +28,8 @@ protected:
 	PieceType m_name;
 	int m_position[2]{0, 0};
 	bool m_isBlack;
+	vector<array<int, 2>> CheckSides( int board[8][8]);
+	vector<array<int, 2>> CheckDiagonals(int board[8][8]);
 };
 
 Piece::Piece(PieceType name, int x, int y, bool isBlack )
@@ -52,6 +56,102 @@ int* Piece::getPosition() {
 
 bool Piece::isBlack() {
 	return m_isBlack;
+}
+
+ vector<array<int, 2>> Piece::CheckSides( int board[8][8])
+{
+	vector<array<int, 2>> retVal;
+
+	for (int i = m_position[0] + 1; i < 8; i++) {
+		if (board[i][m_position[1]] == 2) {
+			retVal.push_back({ i, m_position[1] });
+		}
+		else if (board[i][m_position[1]] == !isBlack) {
+			retVal.push_back({ i, m_position[1] });
+			break;
+		}
+	}
+
+	for (int i = m_position[0] - 1; i >= 0; i--) {
+		if (board[i][m_position[1]] == 2) {
+			retVal.push_back({ i, m_position[1] });
+		}
+		else if (board[i][m_position[1]] == !isBlack) {
+			retVal.push_back({ i, m_position[1] });
+			break;
+		}
+	}
+
+	for (int i = m_position[1] + 1; i < 8; i++) {
+		if (board[m_position[0]][i] == 2) {
+			retVal.push_back({ m_position[0], i });
+		}
+		else if (board[m_position[0]][i] == !isBlack) {
+			retVal.push_back({ m_position[0], i });
+			break;
+		}
+	}
+
+	for (int i = m_position[1] - 1; i >= 0; i--) {
+		if (board[m_position[0]][i] == 2) {
+			retVal.push_back({ m_position[0], i });
+		}
+		else if (board[m_position[0]][i] == !isBlack) {
+			retVal.push_back({ m_position[0], i });
+			break;
+		}
+	}
+
+	return retVal;
+}
+
+ vector<array<int, 2>> Piece::CheckDiagonals(int board[8][8])
+{
+	 vector<array<int, 2>> retVal;
+
+	 bool first = true, second = true, third = true, forth = true;
+
+	 for (int i = 1; i < 8; i++) {
+
+		 if (first && m_position[0] + i < 8 && m_position[1] + i < 8) {
+			 if (board[m_position[0] + i][m_position[1] + i] != (int)m_isBlack) {
+				 retVal.push_back({ m_position[0] + i , m_position[1] + i });
+			 }
+			 else {
+				 first = false;
+			 }
+		 }
+
+		 if (second && m_position[0] + i < 8 && m_position[1] - i >= 0) {
+			 if(board[m_position[0] + i][m_position[1] - i] != (int)m_isBlack) {
+				 retVal.push_back({ m_position[0] + i , m_position[1] - i });
+			 }
+			 else {
+				second = false;
+			 }
+		 }
+
+		 if (third && m_position[0] - i < 8 && m_position[1] - i >= 0) {
+			 if (board[m_position[0] - i][m_position[1] - i] != (int)m_isBlack) {
+				 retVal.push_back({ m_position[0] - i , m_position[1] - i });
+			 }
+			 else {
+				 third = false;
+			 }
+		 }
+
+		 if (forth && m_position[0] - i < 8 && m_position[1] + i >= 0) {
+			 if (board[m_position[0] - i][m_position[1] + i] != (int)m_isBlack) {
+				 retVal.push_back({ m_position[0] + i , m_position[1] - i });
+			 }
+			 else {
+				 forth = false;
+			 }
+		 }
+
+	 }
+
+	 return retVal;
 }
 
 bool Piece::Move(int position[], int board[8][8]) {
