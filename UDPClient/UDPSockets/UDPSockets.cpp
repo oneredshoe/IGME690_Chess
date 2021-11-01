@@ -58,7 +58,7 @@ int main()
             if (isMyTurn == true)
             {
                 // it is now my turn and i get data that is my move
-                std::cout << "Enter data to transmit : " << std::endl;
+                std::cout << "Enter data to transmit in the format (start location end location): " << std::endl;
                 std::getline(std::cin, data);
                 data = id + data;
 
