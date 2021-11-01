@@ -17,6 +17,8 @@ public:
 	BoardState();
 	~BoardState();
 	bool movePiece(int startPos[], int endPos[]);
+	bool getGameOver();
+	bool getWinner();
 
 private:
 	int m_board[8][8];
@@ -101,6 +103,12 @@ BoardState::BoardState(): possibleDeath(NONE, -1, -1, false){
 
 }
 
+/// <summary>
+/// move a piece and will switch turns if the move is successfull
+/// </summary>
+/// <param name="startPos"></param>
+/// <param name="endPos"></param>
+/// <returns></returns>
 bool BoardState::movePiece(int startPos[], int endPos[]) {
 	//make sure piece is correct turn
 	if (m_board[startPos[0]][startPos[1]] != (int)isBlackTurn) {
@@ -131,14 +139,33 @@ bool BoardState::movePiece(int startPos[], int endPos[]) {
 
 		m_pieces.erase(startPos[0] * 8 + startPos[1]);
 
+		//see if we have to update the king pos
 		if (m_pieces[endPos[0] * 8 + endPos[1]].getName() == KING) {
-			
+			if (isBlackTurn) {
+				blackKingPos[0] = endPos[0];
+				blackKingPos[1] = endPos[1];
+			}else{
+				whiteKingPos[0] = endPos[0];
+				whiteKingPos[1] = endPos[1];
+			}
 		}
 		
 	}
 
+	isBlackTurn = !isBlackTurn;
+
 	return true;
 
+}
+
+bool BoardState::getGameOver()
+{
+	return gameOver;
+}
+
+//returns true if black won the game
+bool BoardState::getWinner() {
+	return didBlackWin;
 }
 
 BoardState::~BoardState()
