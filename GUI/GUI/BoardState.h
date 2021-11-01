@@ -1,13 +1,8 @@
 #ifndef BOARDSTATE_H
 #define BOARDSTATE_H
 
-#include "Horse.cpp"
-#include "King.cpp"
-#include "Queen.cpp"
-#include "Bishop.cpp"
-#include "Castle.cpp"
-#include "Pawn.cpp"
-#include "Horse.cpp"
+#include "Piece.h"
+#include "Move.cpp"
 #include <map>
 
 
@@ -27,15 +22,13 @@ private:
 	int whiteKingPos[2];
 	int blackKingPos[2];
 
-	Piece possibleDeath;
-
 	bool isBlackTurn;
 
 	bool gameOver;
 	bool didBlackWin;
 };
 
-BoardState::BoardState(): possibleDeath(NONE, -1, -1, false){
+ BoardState::BoardState(){
 
 	gameOver = false;
 	didBlackWin = true;

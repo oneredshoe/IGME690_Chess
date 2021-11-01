@@ -42,7 +42,6 @@ void Board::SetUp() {
             isBlack = !isBlack;
 
             m_board[i][j].setPosition(sf::Vector2f(i * m_squareSize, j * m_squareSize));
-            m_occupations[i][j] = NONE;
         }
 
         isBlack = !isBlack;

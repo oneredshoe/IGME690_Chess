@@ -41,7 +41,7 @@ public:
 	
 
 	virtual bool Move(int position[], int board[8][8]);
-	virtual vector< array<int, 2>>PossibleMoves(int board[8][8]);
+	virtual vector<array<int, 2>>PossibleMoves(int board[8][8]);
 	
 protected:
 	PieceType m_name;
@@ -62,7 +62,7 @@ Piece::Piece(PieceType name, int x, int y, bool isBlack )
 
 Piece::~Piece()
 {
-	delete []m_position;
+	
 }
 
 PieceType Piece::getName() {
@@ -183,5 +183,66 @@ bool Piece::Move(int position[], int board[8][8]) {
 	}
 
 	return false;
+}
+
+vector<array<int, 2>> Piece::PossibleMoves(int board[8][8])
+{
+	return vector<array<int, 2>>();
+}
+
+class Horse : public Piece {
+public:
+	Horse(int x, int y, bool isBlack);
+	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
+};
+
+Horse::Horse(int x, int y, bool isBlack) : Piece(HORSE, x, y, isBlack) {}
+
+
+class King : public Piece {
+public:
+	King(int x, int y, bool isBlack);
+	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
+};
+
+King::King(int x, int y, bool isBlack) : Piece(KING, x, y, isBlack) {}
+
+class Queen : public Piece {
+public:
+	Queen(int x, int y, bool isBlack);
+	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
+};
+
+Queen::Queen(int x, int y, bool isBlack) : Piece(QUEEN, x, y, isBlack) {}
+
+class Bishop : public Piece {
+public:
+	Bishop(int x, int y, bool isBlack);
+	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
+};
+
+Bishop::Bishop(int x, int y, bool isBlack) : Piece(BISHOP, x, y, isBlack) {}
+
+class Castle : public Piece {
+public:
+	Castle(int x, int y, bool isBlack);
+	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
+};
+
+Castle::Castle(int x, int y, bool isBlack) : Piece(CASTLE, x, y, isBlack) {}
+
+class Pawn : public Piece
+{
+public:
+	Pawn(int x, int y, bool isBlack);
+	bool Move(int position[], int board[8][8]) override;
+	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
+
+private:
+	bool m_hasMoved;
+};
+
+Pawn::Pawn(int x, int y, bool isBlack) : Piece(PAWN, x, y, isBlack) {
+	m_hasMoved = false;
 }
 #endif // !PIECE_H
