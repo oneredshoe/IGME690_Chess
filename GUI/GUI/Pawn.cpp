@@ -2,24 +2,7 @@
 #include <cmath>  
 
 
-/*
-Broad
-  A  B  C  D  E  F  G  H
-  0  1  2  3  4  5  6  7 
-0		
-1	[black pieces]
-2
-3
-4
-5
-6	[white pieces]
-7
 
-a white piece is denoted as 0
-a black piece is denoted as 1
-a empty square is denotd as 2
-
-*/
 class Pawn: public Piece
 {
 public:

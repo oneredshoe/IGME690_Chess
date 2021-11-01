@@ -4,6 +4,25 @@
 #include <vector>
 #include <array>
 
+/*
+Broad
+  A  B  C  D  E  F  G  H
+  0  1  2  3  4  5  6  7
+0
+1	[black pieces]
+2
+3
+4
+5
+6	[white pieces]
+7
+
+a white piece is denoted as 0
+a black piece is denoted as 1
+a empty square is denotd as 2
+
+*/
+
 using namespace std;
 
 enum PieceType { HORSE, CASTLE, BISHOP, PAWN, KING, QUEEN };
@@ -66,7 +85,7 @@ bool Piece::isBlack() {
 		if (board[i][m_position[1]] == 2) {
 			retVal.push_back({ i, m_position[1] });
 		}
-		else if (board[i][m_position[1]] == !isBlack) {
+		else if (board[i][m_position[1]] != (int)m_isBlack) {
 			retVal.push_back({ i, m_position[1] });
 			break;
 		}
@@ -76,7 +95,7 @@ bool Piece::isBlack() {
 		if (board[i][m_position[1]] == 2) {
 			retVal.push_back({ i, m_position[1] });
 		}
-		else if (board[i][m_position[1]] == !isBlack) {
+		else if (board[i][m_position[1]] != (int)m_isBlack) {
 			retVal.push_back({ i, m_position[1] });
 			break;
 		}
@@ -86,7 +105,7 @@ bool Piece::isBlack() {
 		if (board[m_position[0]][i] == 2) {
 			retVal.push_back({ m_position[0], i });
 		}
-		else if (board[m_position[0]][i] == !isBlack) {
+		else if (board[m_position[0]][i] != (int)m_isBlack) {
 			retVal.push_back({ m_position[0], i });
 			break;
 		}
@@ -96,7 +115,7 @@ bool Piece::isBlack() {
 		if (board[m_position[0]][i] == 2) {
 			retVal.push_back({ m_position[0], i });
 		}
-		else if (board[m_position[0]][i] == !isBlack) {
+		else if (board[m_position[0]][i] != (int)m_isBlack) {
 			retVal.push_back({ m_position[0], i });
 			break;
 		}
