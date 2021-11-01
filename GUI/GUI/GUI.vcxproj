@@ -155,8 +155,10 @@
   <ItemGroup>
     <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="Castle.cpp" />
+    <ClCompile Include="King.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pawn.cpp" />
+    <ClCompile Include="Queen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
