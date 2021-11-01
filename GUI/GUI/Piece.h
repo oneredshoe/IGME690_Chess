@@ -39,7 +39,7 @@ public:
 	bool isBlack();
 
 	
-
+	virtual void Draw();
 	virtual bool Move(int position[], int board[8][8]);
 	virtual vector< array<int, 2>>PossibleMoves(int board[8][8]);
 	
@@ -183,5 +183,10 @@ bool Piece::Move(int position[], int board[8][8]) {
 	}
 
 	return false;
+}
+
+void Piece::Draw()
+{
+	
 }
 #endif // !PIECE_H
