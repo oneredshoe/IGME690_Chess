@@ -28,7 +28,7 @@ int main()
         int black;
         int currentPlayer = 0; 
 
-        bool validMove;
+        bool validMove = true;
 
         while (1)
         {
@@ -50,7 +50,7 @@ int main()
 
                 else if (clients.size() >= 2)
                 {
-                    std:cout << "I have 2 now" << std::endl;
+                    std:cout << "There are now two players, the game can start." << std::endl;
 
                     // set the 0th index to white and tells them
                     white = 0;
@@ -75,6 +75,8 @@ int main()
             // if the move is valid, I just send it to the next player and we're good
             // if not, I have to tell the user it's invalid, and ask for another one
 
+            // check for valid move here
+
             // this is white's move
             if (buffer[0] == '0')
             {
@@ -82,8 +84,7 @@ int main()
                 if (validMove == true)
                 {
                     // this will be replaced with the board updates
-                    // std::cout << "Enter data to transmit : " << std::endl;
-                    // std::getline(std::cin, data);
+                    // it will ideally be the four character array to represent starting position and ending position
                     data = buffer;
                     data = "They played: " + data;
 
@@ -96,15 +97,14 @@ int main()
                     Socket.SendTo(clients[0], data.c_str(), data.size());
                 }
             }
-            // this is black's moev
+            // this is black's move
             else if (buffer[0] == '1')
             {
                 // if black played a valid move, just send it to white
-                if (validMove)
+                if (validMove == true)
                 {
                     // this will be replaced with the board updates
-                    // std::cout << "Enter data to transmit : " << std::endl;
-                    // std::getline(std::cin, data);
+                    // again, here will ideally be the 4 char array
                     data = buffer;
                     data = "They played: " + data;
 

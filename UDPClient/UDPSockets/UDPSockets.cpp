@@ -37,8 +37,17 @@ int main()
             id = '1';
             std::cout << "I go second" << std::endl;
         }
+
+        if (id == '0' || id == '1')
+        {
+            gameInPlay = true;
+        }
+        else
+        {
+            gameInPlay = false;
+        }
         
-        while (1)
+        while (gameInPlay)
         {
             // if it's not my turn yet, I wait for the server
             // to tell me what happens
@@ -91,17 +100,14 @@ int main()
                 Socket.SendTo(IP, PORT, data.c_str(), data.size());
                 isMyTurn = false;
             }
-
-            // because we wait at the start of the loop we /shouldnt/ need this
-            // Socket.RecvFrom(buffer, sizeof(buffer));
         }
 
 
-        //Game Loop
-        while (gameInPlay)
-        {
-            gameInPlay = false;
-        }
+        ////Game Loop
+        //while (gameInPlay)
+        //{
+        //    gameInPlay = false;
+        //}
         
 
     }
