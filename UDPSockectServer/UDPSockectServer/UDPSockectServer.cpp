@@ -1,11 +1,7 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
 #include "Network.h"
 #include "iostream"
 #include <vector>
-#include "Board.h"
 #include "BoardState.h"
-#include "Chess.h"
 #include "Piece.h"
 #define SFML_STATIC
 
@@ -93,17 +89,32 @@ int main()
             string incomingMove = buffer;
             incomingMove = incomingMove.substr(1, 4);
 
+            std::cout << incomingMove << std::endl;
+
             // now I need to break that into two int array
             int startPos[2];
             startPos[0] = stoi(incomingMove.substr(0, 1));
             startPos[1] = stoi(incomingMove.substr(1, 1));
 
+            std::cout << "Start pos" << std::endl;
+            std::cout << startPos[0] << std::endl;
+            std::cout << startPos[1] << std::endl;
+
             int endPos[2];
             endPos[0] = stoi(incomingMove.substr(2, 1));
             endPos[1] = stoi(incomingMove.substr(3, 1));
 
+
+            std::cout << "End pos"<< std::endl;
+            std::cout << endPos[0] << std::endl;
+            std::cout << endPos[1] << std::endl;
+
             // now you send it through the board to validate it. 
             validMove = m_boardState.movePiece(startPos, endPos);
+
+            std::cout << validMove << std::endl;
+
+            std::cout << buffer << std::endl;
 
             // this is white's move
             if (buffer[0] == '0')

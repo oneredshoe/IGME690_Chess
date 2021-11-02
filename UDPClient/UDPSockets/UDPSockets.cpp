@@ -62,8 +62,12 @@ int main()
             {
                 Socket.RecvFrom(buffer, sizeof(buffer));
 
+                std::cout << buffer << std::endl;
+
                 if (buffer == "invalid")
                 {
+                    std::cout << "You entered an invalid move" << std::endl;
+
                     // I played an invalid move, and need to play another
                     // get data from UI
                     std::cout << "Enter data to transmit : " << std::endl;

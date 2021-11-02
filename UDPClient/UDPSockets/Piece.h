@@ -61,6 +61,14 @@ Piece::Piece(PieceType name, int x, int y, bool isBlack )
 	m_isBlack = isBlack;
 }
 
+Piece::Piece()
+{
+	m_name = PAWN;
+	m_position[0] = 0;
+	m_position[1] = 0;
+	m_isBlack = false;
+}
+
 Piece::~Piece()
 {
 	
