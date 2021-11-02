@@ -1,5 +1,12 @@
 #include "Network.h"
 #include "iostream"
+//#define SFML_STATIC
+//#include <SFML/Graphics.hpp>
+//#include <SFML/Window.hpp>
+#include "Board.h"
+#include "BoardState.h"
+#include "Chess.h"
+#include "Piece.h"
 
 #pragma once
 
@@ -9,6 +16,13 @@ int main()
     int PORT = 8888;
     bool gameInPlay = true;
     bool isMyTurn;
+
+ /*   sf::RenderWindow window(sf::VideoMode(50 * 8, 50 * 8), "Chess");
+    bool firstRound = true;
+    Board board(window);*/
+
+    BoardState m_boardState = BoardState();
+
 
     try
     {
