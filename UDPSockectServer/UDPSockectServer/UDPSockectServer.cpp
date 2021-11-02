@@ -1,6 +1,13 @@
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include "Network.h"
 #include "iostream"
 #include <vector>
+#include "Board.h"
+#include "BoardState.h"
+#include "Chess.h"
+#include "Piece.h"
+#define SFML_STATIC
 
 
 using namespace std;
@@ -10,6 +17,8 @@ int main()
 {
     std::string IP = "127.0.0.1";
     int PORT = 8888;
+
+    BoardState m_boardState = BoardState();
 
     try
     {
@@ -75,9 +84,26 @@ int main()
             // if the move is valid, I just send it to the next player and we're good
             // if not, I have to tell the user it's invalid, and ask for another one
 
-            // check for valid move here
-            // if piece at the start location == true, it's valid. if false, invalid;
-            // can just call validMove = piece at start location.Move();
+            // to do this, I split the buffer, stripping away the id
+            // then i split it into two int arrays
+            // then i pass those into the boardstat.movepiece
+            // this gives back true if it's a valid move and false otherwise
+
+            // this gets just the move portion, getting rid of the ID
+            string incomingMove = buffer;
+            incomingMove = incomingMove.substr(1, 4);
+
+            // now I need to break that into two int array
+            int startPos[2];
+            startPos[0] = stoi(incomingMove.substr(0, 1));
+            startPos[1] = stoi(incomingMove.substr(1, 1));
+
+            int endPos[2];
+            endPos[0] = stoi(incomingMove.substr(2, 1));
+            endPos[1] = stoi(incomingMove.substr(3, 1));
+
+            // now you send it through the board to validate it. 
+            validMove = m_boardState.movePiece(startPos, endPos);
 
             // this is white's move
             if (buffer[0] == '0')
@@ -88,7 +114,6 @@ int main()
                     // this will be replaced with the board updates
                     // it will ideally be the four character array to represent starting position and ending position
                     data = buffer;
-                    data = "They played: " + data;
 
                     Socket.SendTo(clients[1], data.c_str(), data.size());
                 }
@@ -108,7 +133,6 @@ int main()
                     // this will be replaced with the board updates
                     // again, here will ideally be the 4 char array
                     data = buffer;
-                    data = "They played: " + data;
 
                     Socket.SendTo(clients[0], data.c_str(), data.size());
                 }

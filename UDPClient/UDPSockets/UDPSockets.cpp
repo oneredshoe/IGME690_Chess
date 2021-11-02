@@ -1,8 +1,8 @@
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include "Network.h"
 #include "iostream"
-//#define SFML_STATIC
-//#include <SFML/Graphics.hpp>
-//#include <SFML/Window.hpp>
+#define SFML_STATIC
 #include "Board.h"
 #include "BoardState.h"
 #include "Chess.h"
@@ -17,9 +17,9 @@ int main()
     bool gameInPlay = true;
     bool isMyTurn;
 
- /*   sf::RenderWindow window(sf::VideoMode(50 * 8, 50 * 8), "Chess");
+    sf::RenderWindow window(sf::VideoMode(50 * 8, 50 * 8), "Chess");
     bool firstRound = true;
-    Board board(window);*/
+    Board board(window);
 
     BoardState m_boardState = BoardState();
 
@@ -91,6 +91,23 @@ int main()
                     // here I need to update my local board
                     std::cout << buffer << std::endl;
 
+                    // this gets just the move portion, getting rid of the ID
+                    string incomingMove = buffer;
+                    incomingMove = incomingMove.substr(1, 4);
+
+                    // now I need to break that into two int array
+                    int startPos[2];
+                    startPos[0] = stoi(incomingMove.substr(0,1));
+                    startPos[1] = stoi(incomingMove.substr(1, 1));
+
+                    int endPos[2];
+                    endPos[0] = stoi(incomingMove.substr(2, 1));
+                    endPos[1] = stoi(incomingMove.substr(3, 1));
+
+                    // now you send it through your board to update it
+                    // the move is already validated by the server
+                    m_boardState.movePiece(startPos, endPos);
+
                     isMyTurn = true;
                 }
             }
@@ -109,6 +126,7 @@ int main()
                 // this will go to the server, and the server will tell us if it was valid or not
                 // if not, try again?
                 // I think it'll actually have to be an array of 5, because we need the ID
+                // this will be when visuals hook up, but for now the user will type in their moves in terms of a 2d array from 0-7 on both axes
 
                 // when it is my turn, i send my move to the server
                 Socket.SendTo(IP, PORT, data.c_str(), data.size());
