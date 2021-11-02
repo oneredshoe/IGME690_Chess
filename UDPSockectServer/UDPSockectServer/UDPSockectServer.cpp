@@ -20,13 +20,6 @@ int main()
 
 
         vector<sockaddr_in> clients;
-        // i wonder if any other data strcuture will work. 
-        //  maybe the clients can just send requests for updates every so often?
-        // Also, for the board, each client should have the board on their end
-        // the server should only recieve moves, update it's matrix, and send that back
-
-        // clients should have the board and the game - the client can determine if the move is legal
-        //  -> does this make it hella easy to cheat? Maybe.....
        
         Socket.Bind(PORT);
 
@@ -34,6 +27,8 @@ int main()
         int white;
         int black;
         int currentPlayer = 0; 
+
+        bool validMove = true;
 
         while (1)
         {
@@ -55,7 +50,7 @@ int main()
 
                 else if (clients.size() >= 2)
                 {
-                    std:cout << "I have 2 now" << std::endl;
+                    std:cout << "There are now two players, the game can start." << std::endl;
 
                     // set the 0th index to white and tells them
                     white = 0;
@@ -76,26 +71,55 @@ int main()
             sockaddr_in temp = Socket.RecvFrom(buffer, sizeof(buffer));
             std::cout << buffer << std::endl;
 
+            // here instead of just putting it into the buffer, I go and validate moves
+            // if the move is valid, I just send it to the next player and we're good
+            // if not, I have to tell the user it's invalid, and ask for another one
+
+            // check for valid move here
+            // if piece at the start location == true, it's valid. if false, invalid;
+            // can just call validMove = piece at start location.Move();
+
+            // this is white's move
             if (buffer[0] == '0')
             {
-                // this will be replaced with the board updates
-                // std::cout << "Enter data to transmit : " << std::endl;
-                // std::getline(std::cin, data);
-                data = buffer;
-                data = "They played: " + data;
+                // if white played a valid move, just send it to black
+                if (validMove == true)
+                {
+                    // this will be replaced with the board updates
+                    // it will ideally be the four character array to represent starting position and ending position
+                    data = buffer;
+                    data = "They played: " + data;
 
-                Socket.SendTo(clients[1], data.c_str(), data.size());
+                    Socket.SendTo(clients[1], data.c_str(), data.size());
+                }
+                // if white played an invalid move, tell them
+                else
+                {
+                    data = "invalid";
+                    Socket.SendTo(clients[0], data.c_str(), data.size());
+                }
             }
+            // this is black's move
             else if (buffer[0] == '1')
             {
-                // this will be replaced with the board updates
-                // std::cout << "Enter data to transmit : " << std::endl;
-                // std::getline(std::cin, data);
-                data = buffer;
-                data = "They played: " + data;
+                // if black played a valid move, just send it to white
+                if (validMove == true)
+                {
+                    // this will be replaced with the board updates
+                    // again, here will ideally be the 4 char array
+                    data = buffer;
+                    data = "They played: " + data;
 
-                Socket.SendTo(clients[0], data.c_str(), data.size());
+                    Socket.SendTo(clients[0], data.c_str(), data.size());
+                }
+                // if black played an invalid move, tell them
+                else
+                {
+                    data = "invalid";
+                    Socket.SendTo(clients[1], data.c_str(), data.size());
+                }
             }
+            // no on'es move, should never reach this
             else
             {
                 // wha happuh?
