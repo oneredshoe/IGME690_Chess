@@ -64,7 +64,7 @@ int main()
 
                 std::cout << buffer << std::endl;
 
-                if (buffer == "invalid")
+                if (buffer[0] == 'i')
                 {
                     std::cout << "You entered an invalid move" << std::endl;
 

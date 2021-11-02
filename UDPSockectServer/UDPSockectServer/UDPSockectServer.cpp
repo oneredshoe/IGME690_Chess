@@ -124,7 +124,7 @@ int main()
                 {
                     // this will be replaced with the board updates
                     // it will ideally be the four character array to represent starting position and ending position
-                    data = buffer;
+                    data = incomingMove;
 
                     Socket.SendTo(clients[1], data.c_str(), data.size());
                 }
@@ -143,7 +143,7 @@ int main()
                 {
                     // this will be replaced with the board updates
                     // again, here will ideally be the 4 char array
-                    data = buffer;
+                    data = incomingMove;
 
                     Socket.SendTo(clients[0], data.c_str(), data.size());
                 }
