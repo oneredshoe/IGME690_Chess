@@ -33,6 +33,7 @@ class Piece
 {
 public:
 	Piece(PieceType name, int x, int y, bool isBlack);
+	Piece();
 	~Piece();
 	PieceType getName();
 	int* getPosition();
