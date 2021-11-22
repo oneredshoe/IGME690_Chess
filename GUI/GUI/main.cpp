@@ -10,6 +10,8 @@ int main()
     bool firstRound = true;
     Board board(window);
 
+	
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -20,6 +22,8 @@ int main()
         }
 
         board.Draw();
+
+        
         window.display();
     }
 

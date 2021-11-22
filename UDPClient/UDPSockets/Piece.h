@@ -27,12 +27,14 @@ using namespace std;
 
 enum PieceType { HORSE, CASTLE, BISHOP, PAWN, KING, QUEEN, NONE };
 
+<<<<<<< Updated upstream
 enum Letters {A = 0, B = 1, C = 2, D = 3, E = 4, F = 5, G = 6, H = 7};
 
 class Piece
 {
 public:
 	Piece(PieceType name, int x, int y, bool isBlack);
+<<<<<<< Updated upstream
 	Piece();
 	~Piece();
 	PieceType getName();
@@ -72,6 +74,11 @@ Piece::Piece()
 Piece::~Piece()
 {
 	
+=======
+Piece::~Piece()
+{
+
+>>>>>>> Stashed changes
 }
 
 PieceType Piece::getName() {
@@ -86,6 +93,7 @@ bool Piece::isBlack() {
 	return m_isBlack;
 }
 
+<<<<<<< Updated upstream
  vector<array<int, 2>> Piece::CheckSides( int board[8][8])
 {
 	vector<array<int, 2>> retVal;
@@ -133,6 +141,7 @@ bool Piece::isBlack() {
 	return retVal;
 }
 
+<<<<<<< Updated upstream
  vector<array<int, 2>> Piece::CheckDiagonals(int board[8][8])
 {
 	 vector<array<int, 2>> retVal;
@@ -206,6 +215,7 @@ class Horse : public Piece {
 public:
 	Horse(int x, int y, bool isBlack);
 	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
+<<<<<<< Updated upstream
 };
 
 Horse::Horse(int x, int y, bool isBlack) : Piece(HORSE, x, y, isBlack) {}
