@@ -63,8 +63,12 @@ vector<array<int, 2>> Castle::PossibleMoves(int board[8][8])
 bool Pawn::Move(int position[], int board[8][8]) {
 	vector <array<int, 2>> check = PossibleMoves(board);
 
+	
 	for (array<int, 2> possibility : check) {
 		if (position[0] == possibility[0] && position[1] == possibility[1]) {
+
+			std::cout << 'X' << possibility[0] << std::endl;
+			std::cout << 'Y' << possibility[1] << std::endl;
 			m_hasMoved = true;
 			return true;
 		}

@@ -2,7 +2,7 @@
 #define BOARDSTATE_H
 
 #include "Piece.h"
-#include "Move.cpp"
+#include <iostream>
 #include <map>
 
 
@@ -17,7 +17,7 @@ public:
 
 private:
 	int m_board[8][8];
-	map<int, Piece> m_pieces;
+	Piece m_pieces[8][8];
 
 	int whiteKingPos[2];
 	int blackKingPos[2];
@@ -49,44 +49,51 @@ private:
 
 	for (int i = 6; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			m_board[i][j] = 1;
+			m_board[i][j] = 0;
 		}
 	}
 
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			cout << m_board[i][j];
+		}
+		cout << endl;
+	}
+
 	//pawns
-	for (int i = 8; i < 16; i++) {
-		m_pieces.insert(make_pair(i, Pawn(1, i, true)));
-		m_pieces.insert(make_pair(48 + i, Pawn(6, i, false)));
+	for (int i = 0; i < 8; i++) {
+		m_pieces[1][i] = Pawn(1, i, true);
+		m_pieces[6][i] = Pawn(6, i, false);
 	}
 
 	//CASTLE
-	m_pieces.insert(make_pair(0, Castle(0, 0, true)));
-	m_pieces.insert(make_pair(7, Castle(0, 7, true)));
+	m_pieces[0][0] = Castle(0, 0, true);
+	m_pieces[0][7] = Castle(0, 7, true);
 
-	m_pieces.insert(make_pair(56, Castle(7, 0, false)));
-	m_pieces.insert(make_pair(63, Castle(7, 7, false)));
+	m_pieces[7][0] = Castle(7, 0, false);
+	m_pieces[7][7] = Castle(7, 7, false);
 
 	//horse
-	m_pieces.insert(make_pair(1, Horse(0, 1, true)));
-	m_pieces.insert(make_pair(6, Horse(0, 6, true)));
+	m_pieces[0][1] = Horse(0, 1, true);
+	m_pieces[0][6] = Horse(0, 6, true);
 
-	m_pieces.insert(make_pair(57, Horse(7, 1, false)));
-	m_pieces.insert(make_pair(62, Horse(7, 6, false)));
+	m_pieces[7][1] = Horse(7, 1, false);
+	m_pieces[7][1] = Horse(7, 6, false);
 
 	//bishop
-	m_pieces.insert(make_pair(2, Bishop(0, 2, true)));
-	m_pieces.insert(make_pair(6, Bishop(0, 5, true)));
+	m_pieces[0][2] = Bishop(0, 2, true);
+	m_pieces[0][5] = Bishop(0, 5, true);
 
-	m_pieces.insert(make_pair(58, Bishop(7, 2, false)));
-	m_pieces.insert(make_pair(61, Bishop(7, 5, false)));
+	m_pieces[7][2] = Bishop(7, 2, false);
+	m_pieces[7][5] = Bishop(7, 5, false);
 
 	//queen
-	m_pieces.insert(make_pair(3, Queen(0, 3, true)));
-	m_pieces.insert(make_pair(59, Queen(7, 3, false)));
+	m_pieces[0][3] = Queen(0, 3, true);
+	m_pieces[7][3] = Queen(7, 3, false);
 
 	//king
-	m_pieces.insert(make_pair(4, King(0, 4, true)));
-	m_pieces.insert(make_pair(60, King(7, 4, false)));
+	m_pieces[0][4] = King(0, 4, true);
+	m_pieces[7][4] = King(7, 4, false);
 
 	whiteKingPos[0] = 7;
 	whiteKingPos[1] = 4;
@@ -104,13 +111,31 @@ private:
 /// <returns></returns>
 bool BoardState::movePiece(int startPos[], int endPos[]) {
 	//make sure piece is correct turn
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			cout << m_board[i][j];
+		}
+		cout << endl;
+	}
+
 	if (m_board[startPos[0]][startPos[1]] != (int)isBlackTurn) {
 		return false;
 	}
 
 	int endPosValue = m_board[endPos[0]][endPos[1]];
 
-	bool moved = m_pieces[startPos[0] * 8 + startPos[1]].Move(endPos, m_board);
+	cout << m_pieces[startPos[0]][startPos[1]].getName() << endl;
+
+	vector<array<int, 2>> check =  m_pieces[startPos[0]][startPos[1]].PossibleMoves(m_board);
+	cout << "check" << check.size() << endl;
+	bool moved = false;
+	for (array<int, 2> possibility : check) {
+		cout << "hello" << possibility[0] << possibility[1] << endl;
+		if (endPos[0] == possibility[0] && endPos[1] == possibility[1]) {
+			moved = true;
+			break;
+		}
+	}
 
 	if (!moved) {
 		return false;
@@ -128,12 +153,12 @@ bool BoardState::movePiece(int startPos[], int endPos[]) {
 		}
 
 		
-		m_pieces[endPos[0] * 8 + endPos[1]] = m_pieces[startPos[0] * 8 + startPos[1]];
+		m_pieces[endPos[0]][endPos[1]] = m_pieces[startPos[0]][startPos[1]];
 
-		m_pieces.erase(startPos[0] * 8 + startPos[1]);
+		m_pieces[startPos[0]][startPos[1]] = Piece();
 
 		//see if we have to update the king pos
-		if (m_pieces[endPos[0] * 8 + endPos[1]].getName() == KING) {
+		if (m_pieces[endPos[0]][endPos[1]].getName() == KING) {
 			if (isBlackTurn) {
 				blackKingPos[0] = endPos[0];
 				blackKingPos[1] = endPos[1];

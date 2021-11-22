@@ -2,7 +2,6 @@
 #include "iostream"
 #include <vector>
 #include "BoardState.h"
-#include "Piece.h"
 #define SFML_STATIC
 
 
