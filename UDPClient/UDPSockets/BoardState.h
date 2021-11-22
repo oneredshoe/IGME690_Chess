@@ -29,9 +29,6 @@ private:
 };
 
  BoardState::BoardState(){
-=======
-BoardState::BoardState() {
->>>>>>> Stashed changes
 
 	gameOver = false;
 	didBlackWin = true;
@@ -131,9 +128,6 @@ bool BoardState::movePiece(int startPos[], int endPos[]) {
 		}
 
 		
-=======
-
->>>>>>> Stashed changes
 		m_pieces[endPos[0] * 8 + endPos[1]] = m_pieces[startPos[0] * 8 + startPos[1]];
 
 		m_pieces.erase(startPos[0] * 8 + startPos[1]);
@@ -144,18 +138,11 @@ bool BoardState::movePiece(int startPos[], int endPos[]) {
 				blackKingPos[0] = endPos[0];
 				blackKingPos[1] = endPos[1];
 			}else{
-=======
-			}
-			else {
->>>>>>> Stashed changes
 				whiteKingPos[0] = endPos[0];
 				whiteKingPos[1] = endPos[1];
 			}
 		}
 		
-=======
-
->>>>>>> Stashed changes
 	}
 
 	isBlackTurn = !isBlackTurn;

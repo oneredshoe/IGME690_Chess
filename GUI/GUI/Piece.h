@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <array>
-#include <SFML/Graphics.hpp>
 
 /*
 Broad
@@ -38,9 +37,6 @@ public:
 	PieceType getName();
 	int* getPosition();
 	bool isBlack();
-	void Draw();
-	int getWorldSpaceMulitplier();
-	
 
 	
 
@@ -53,8 +49,6 @@ protected:
 	bool m_isBlack;
 	vector<array<int, 2>> CheckSides( int board[8][8]);
 	vector<array<int, 2>> CheckDiagonals(int board[8][8]);
-
-
 };
 
 Piece::Piece(PieceType name, int x, int y, bool isBlack )
@@ -82,14 +76,6 @@ int* Piece::getPosition() {
 bool Piece::isBlack() {
 	return m_isBlack;
 }
-
-int getWorldSpaceMultiplier()
-{
-	//Multiple the loca with the multiplier to get the piece's correct location
-	return 50;
-}
-
-void Piece::Draw() {}
 
  vector<array<int, 2>> Piece::CheckSides( int board[8][8])
 {
@@ -211,33 +197,14 @@ class Horse : public Piece {
 public:
 	Horse(int x, int y, bool isBlack);
 	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
-	void Draw();
 };
 
 Horse::Horse(int x, int y, bool isBlack) : Piece(HORSE, x, y, isBlack) {}
-void Horse::Draw()
-{
-	
-}
 /*
-* 
-* Issues: Needs SFML
-* Needs a window to draw to
-* 
-* Solutions:
-* Board Method? Takes piece information and based on enum, draws the correct piece?
-* Cons: Pieces wouldn't be directly linked to their own drawing :(
-* 
-* Attempted to follow Board's window set up and that failed miserably, so unless we copy what that has, we gotta move the draw stuff elsewhere
-* 
-* 
-* 
-* m_position * worldSpaceMultiplier
-* 
 			sf::ConvexShape horse;
 
 			//Corner of square the piece is on
-			origin[0] = 0; 
+			origin[0] = 0;
 			origin[1] = 0;
 
 
