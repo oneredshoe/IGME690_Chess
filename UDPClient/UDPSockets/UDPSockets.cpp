@@ -1,3 +1,8 @@
+#define SFML_Static
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+
+
 #include "Network.h"
 #include "iostream"
 #include "BoardState.h"
