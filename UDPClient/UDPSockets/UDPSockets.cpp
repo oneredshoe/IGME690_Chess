@@ -64,6 +64,7 @@ int main()
 
                 std::cout << buffer << std::endl;
 
+                // if your move was invalid, get another move and send it
                 if (buffer[0] == 'i')
                 {
                     std::cout << "You entered an invalid move" << std::endl;
@@ -80,6 +81,22 @@ int main()
                     Socket.SendTo(IP, PORT, data.c_str(), data.size());
                     isMyTurn = false;
                 }
+
+                // if you get the codes of Q, O, or D, then you need to give input so it's your turn
+                else if (buffer[0] == 'Q' // invalid input for draw offer
+                    || buffer[0] == 'O' // the other player offered a draw
+                    || buffer[0] == 'D') // the draw you offered was declined
+                {
+                    isMyTurn = true;
+                }
+
+                // if the draw was accepted or if the other player resigned, the game is over and the loop ends
+                else if (buffer[0] == 'A' || buffer[0] == 'R')
+                {
+                    gameInPlay = false;
+                }
+
+                // this would be getting a normal move fromt he server that the opponent played
                 else
                 {
                     // sends the board the update from the server
@@ -107,11 +124,13 @@ int main()
                 }
             }
 
-            // i don't /think/ i need this but liiiiiiike
+            // if you have recieved a move and it is now your turn
+            // or if they offered a draw, you gave invalid draw acceptance input, or your draw offer was declined
+            // then it is your turn to give input in the form of move or whatever the server asks for
             if (isMyTurn == true)
             {
                 // it is now my turn and i get data that is my move
-                std::cout << "Enter data to transmit in the format (start location end location): " << std::endl;
+                std::cout << "Enter data to transmit in the format (start location end location) or requested by server: " << std::endl;
                 std::getline(std::cin, data);
                 data = id + data;
 

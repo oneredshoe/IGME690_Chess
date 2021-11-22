@@ -96,7 +96,7 @@ int main()
                 if (buffer[1] == 'y' || buffer[1] == 'Y')
                 {
                     // tell both members the draw was accepted
-                    data = "A draw has been accepted. The game is over and has ended in a draw.";
+                    data = "A: Draw has been accepted. The game is over and has ended in a draw.";
 
                     Socket.SendTo(clients[0], data.c_str(), data.size());
                     Socket.SendTo(clients[1], data.c_str(), data.size());
@@ -111,26 +111,35 @@ int main()
                 // if the draw was turned down
                 else if (buffer[1] == 'n' || buffer[1] == 'N')
                 {
-                    // tell both members the draw was declined
-                    data = "The draw has been declined. The game will continue.";
-
-                    Socket.SendTo(clients[0], data.c_str(), data.size());
-                    Socket.SendTo(clients[1], data.c_str(), data.size());
-
+                    // the opposite of the one who declined should be the one moving next
+                    // because W offers, B says no, W plays move
                     if (buffer[0] == '0')
                     {
                         currentPlayer = 1;
+
+                        // give code for draw declined but also tell who is supposed to go next
+                        data = "D0: Draw has been declined. The game will continue.";
+
+                        // tell the player that it was declined and it's their turn now
+                        Socket.SendTo(clients[1], data.c_str(), data.size());
                     }
                     else if (buffer[0] == '1')
                     {
                         currentPlayer = 0;
+                        // give code for draw declined but also tell who is supposed to go next
+                        data = "D1: Draw has been declined. The game will continue.";
+
+                        // tell the player that offered the draw that it was declined
+                        Socket.SendTo(clients[0], data.c_str(), data.size());
                     }
+                    // set this back to false so they can keep playing
+                    drawOffered = false;
                 }
                 // if the user typed in something in valid
                 else
                 {
                     // ask the user for a valid input
-                    data = "That was not a valid input. Type Y to accept and N to deny.";
+                    data = "Q: That was not a valid input. Type Y to accept and N to deny.";
 
                     // send it to the person who just sent us a reply
                     if (buffer[0] == '0')
@@ -151,17 +160,26 @@ int main()
                 // resigning
                 if (buffer[1] == 'r' || buffer[1] == 'R')
                 {
-                    // set data to tell the player that they resigned
-                    data = "The other player resigned. You win.";
-
                     // send the message to the player that won.
                     if (buffer[0] == '0')
                     {
+                        // set data to tell the player that they resigned
+                        data = "R: The other player resigned. You win.";
                         Socket.SendTo(clients[1], data.c_str(), data.size());
+
+                        // now tell the player that resigned the game is over.
+                        data = "R: You have resigned. Game over.";
+                        Socket.SendTo(clients[0], data.c_str(), data.size());
                     }
                     else if (buffer[0] == '1')
                     {
+                        // set data to tell the player that they resigned
+                        data = "R: The other player resigned. You win.";
                         Socket.SendTo(clients[0], data.c_str(), data.size());
+
+                        // now tell the player that resigned the game is over.
+                        data = "R: You have resigned. Game over.";
+                        Socket.SendTo(clients[1], data.c_str(), data.size());
                     }
 
                     // reset for next game
@@ -179,7 +197,7 @@ int main()
                     drawOffered = true;
 
                     // set data to tell them they draw was 
-                    data = "The other player has offered a draw. Type Y to accept and N to deny.";
+                    data = "O: The other player has offered a draw. Type Y to accept and N to deny.";
 
                     // send this data to the next player
                     if (buffer[0] == '0')
