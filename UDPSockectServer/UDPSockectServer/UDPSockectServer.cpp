@@ -32,6 +32,7 @@ int main()
         int white;
         int black;
         int currentPlayer = 0; 
+        bool drawOffered = false;
 
         bool validMove = true;
 
@@ -87,78 +88,196 @@ int main()
 
             // this gets just the move portion, getting rid of the ID
             string incomingMove = buffer;
-            incomingMove = incomingMove.substr(1, 4);
 
-            std::cout << incomingMove << std::endl;
-
-            // now I need to break that into two int array
-            int startPos[2];
-            startPos[0] = stoi(incomingMove.substr(0, 1));
-            startPos[1] = stoi(incomingMove.substr(1, 1));
-
-            std::cout << "Start pos" << std::endl;
-            std::cout << startPos[0] << std::endl;
-            std::cout << startPos[1] << std::endl;
-
-            int endPos[2];
-            endPos[0] = stoi(incomingMove.substr(2, 1));
-            endPos[1] = stoi(incomingMove.substr(3, 1));
-
-
-            std::cout << "End pos"<< std::endl;
-            std::cout << endPos[0] << std::endl;
-            std::cout << endPos[1] << std::endl;
-
-            // now you send it through the board to validate it. 
-            validMove = m_boardState.movePiece(startPos, endPos);
-
-            std::cout << validMove << std::endl;
-
-            std::cout << buffer << std::endl;
-
-            // this is white's move
-            if (buffer[0] == '0')
+            // first thing is to do logic for if the draw has been offered
+            if (drawOffered)
             {
-                // if white played a valid move, just send it to black
-                if (validMove == true)
+                // if the draw was accepted
+                if (buffer[1] == 'y' || buffer[1] == 'Y')
                 {
-                    // this will be replaced with the board updates
-                    // it will ideally be the four character array to represent starting position and ending position
-                    data = incomingMove;
-
-                    Socket.SendTo(clients[1], data.c_str(), data.size());
-                }
-                // if white played an invalid move, tell them
-                else
-                {
-                    data = "invalid";
-                    Socket.SendTo(clients[0], data.c_str(), data.size());
-                }
-            }
-            // this is black's move
-            else if (buffer[0] == '1')
-            {
-                // if black played a valid move, just send it to white
-                if (validMove == true)
-                {
-                    // this will be replaced with the board updates
-                    // again, here will ideally be the 4 char array
-                    data = incomingMove;
+                    // tell both members the draw was accepted
+                    data = "A draw has been accepted. The game is over and has ended in a draw.";
 
                     Socket.SendTo(clients[0], data.c_str(), data.size());
+                    Socket.SendTo(clients[1], data.c_str(), data.size());
+
+                    // reset for next game
+                    currentPlayer = 0;
+                    white = NULL;
+                    black = NULL;
+                    hasGameStarted = false;
+                    drawOffered = false;
                 }
-                // if black played an invalid move, tell them
+                // if the draw was turned down
+                else if (buffer[1] == 'n' || buffer[1] == 'N')
+                {
+                    // tell both members the draw was declined
+                    data = "The draw has been declined. The game will continue.";
+
+                    Socket.SendTo(clients[0], data.c_str(), data.size());
+                    Socket.SendTo(clients[1], data.c_str(), data.size());
+
+                    if (buffer[0] == '0')
+                    {
+                        currentPlayer = 1;
+                    }
+                    else if (buffer[0] == '1')
+                    {
+                        currentPlayer = 0;
+                    }
+                }
+                // if the user typed in something in valid
                 else
                 {
-                    data = "invalid";
-                    Socket.SendTo(clients[1], data.c_str(), data.size());
+                    // ask the user for a valid input
+                    data = "That was not a valid input. Type Y to accept and N to deny.";
+
+                    // send it to the person who just sent us a reply
+                    if (buffer[0] == '0')
+                    {
+                        Socket.SendTo(clients[0], data.c_str(), data.size());
+                        currentPlayer = 0;
+                    }
+                    else if (buffer[0] == '1')
+                    {
+                        Socket.SendTo(clients[1], data.c_str(), data.size());
+                        currentPlayer = 1;
+                    }
                 }
             }
-            // no on'es move, should never reach this
             else
             {
-                // wha happuh?
-                std::cout << "You really hecked this up" << std::endl;
+                // logic for draws and resigning
+                // resigning
+                if (buffer[1] == 'r' || buffer[1] == 'R')
+                {
+                    // set data to tell the player that they resigned
+                    data = "The other player resigned. You win.";
+
+                    // send the message to the player that won.
+                    if (buffer[0] == '0')
+                    {
+                        Socket.SendTo(clients[1], data.c_str(), data.size());
+                    }
+                    else if (buffer[0] == '1')
+                    {
+                        Socket.SendTo(clients[0], data.c_str(), data.size());
+                    }
+
+                    // reset for next game
+                    currentPlayer = 0;
+                    white = NULL;
+                    black = NULL;
+                    hasGameStarted = false;
+                    drawOffered = false;
+                }
+
+                // draw offer
+                else if (buffer[1] == 'o' || buffer[1] == 'O')
+                {
+                    // set the bool to true
+                    drawOffered = true;
+
+                    // set data to tell them they draw was 
+                    data = "The other player has offered a draw. Type Y to accept and N to deny.";
+
+                    // send this data to the next player
+                    if (buffer[0] == '0')
+                    {
+                        Socket.SendTo(clients[1], data.c_str(), data.size());
+                        currentPlayer = 1;
+                    }
+                    else if (buffer[0] == '1')
+                    {
+                        Socket.SendTo(clients[0], data.c_str(), data.size());
+                        currentPlayer = 0;
+                    }
+                }
+                // if neither draw nor resign, go through normal stuff
+                else
+                {
+                    incomingMove = incomingMove.substr(1, 4);
+
+                    std::cout << incomingMove << std::endl;
+
+                    // now I need to break that into two int array
+                    int startPos[2];
+                    startPos[0] = stoi(incomingMove.substr(0, 1));
+                    startPos[1] = stoi(incomingMove.substr(1, 1));
+
+                    std::cout << "Start pos" << std::endl;
+                    std::cout << startPos[0] << std::endl;
+                    std::cout << startPos[1] << std::endl;
+
+                    int endPos[2];
+                    endPos[0] = stoi(incomingMove.substr(2, 1));
+                    endPos[1] = stoi(incomingMove.substr(3, 1));
+
+
+                    std::cout << "End pos" << std::endl;
+                    std::cout << endPos[0] << std::endl;
+                    std::cout << endPos[1] << std::endl;
+
+                    // now you send it through the board to validate it. 
+                    validMove = m_boardState.movePiece(startPos, endPos);
+
+                    std::cout << validMove << std::endl;
+
+                    std::cout << buffer << std::endl;
+
+                    // this is white's move
+                    if (buffer[0] == '0' && currentPlayer == 0)
+                    {
+                        // if white played a valid move, just send it to black
+                        if (validMove == true)
+                        {
+                            // this will be replaced with the board updates
+                            // it will ideally be the four character array to represent starting position and ending position
+                            data = incomingMove;
+
+                            data += " Type r to resign and o to offer draw.";
+
+                            Socket.SendTo(clients[1], data.c_str(), data.size());
+                            currentPlayer = 1;
+                        }
+                        // if white played an invalid move, tell them
+                        else
+                        {
+                            data = "invalid";
+                            Socket.SendTo(clients[0], data.c_str(), data.size());
+                            currentPlayer = 0;
+                        }
+                    }
+                    // this is black's move
+                    else if (buffer[0] == '1' && currentPlayer == 1)
+                    {
+                        // if black played a valid move, just send it to white
+                        if (validMove == true)
+                        {
+                            // this will be replaced with the board updates
+                            // again, here will ideally be the 4 char array
+                            data = incomingMove;
+
+                            data += " Type r to resign and o to offer draw.";
+
+                            Socket.SendTo(clients[0], data.c_str(), data.size());
+                            currentPlayer = 0;
+                        }
+                        // if black played an invalid move, tell them
+                        else
+                        {
+                            data = "invalid";
+                            Socket.SendTo(clients[1], data.c_str(), data.size());
+                            currentPlayer = 1;
+                        }
+                    }
+                    // no on'es move, should never reach this
+                    else
+                    {
+                        // wha happuh?
+                        std::cout << "You really hecked this up" << std::endl;
+                    }
+                }
             }
         }
     }
