@@ -15,9 +15,19 @@ private:
     float m_squareSize = 50;
     void SetUp();
     sf::RenderWindow& m_window;
+    sf::Texture m_brownTexture;
+    sf::Texture m_tanTexture;
 };
 
 Board::Board(sf::RenderWindow& win, float squareSize) : m_window(win) {
+    if (m_brownTexture.loadFromFile("brown.png"))
+    {
+        //error;    
+    }
+    if (m_tanTexture.loadFromFile("tan.png"))
+    {
+        //error;
+    }
     m_squareSize = squareSize;
     SetUp();
 }
@@ -36,8 +46,8 @@ void Board::SetUp() {
         for (int j = 0; j < 8; j++) {
             m_board[i][j] = sf::RectangleShape(sf::Vector2f(m_squareSize, m_squareSize));
 
-            if (isBlack) m_board[i][j].setFillColor(sf::Color::Black);
-            if (!isBlack)m_board[i][j].setFillColor(sf::Color::White);
+            if (isBlack) m_board[i][j].setTexture(&m_brownTexture);//setFillColor(sf::Color::Black);
+            if (!isBlack)m_board[i][j].setTexture(&m_tanTexture);//setFillColor(sf::Color::White);
 
             isBlack = !isBlack;
 
