@@ -1,3 +1,4 @@
+#pragma once
 #define SFML_Static
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -7,8 +8,9 @@
 #include "iostream"
 #include "BoardState.h"
 #include "Piece.h"
+#include "Board.h"
 
-#pragma once
+
 
 int main()
 {
@@ -18,7 +20,8 @@ int main()
     bool isMyTurn;
 
     BoardState m_boardState = BoardState();
-
+    sf::RenderWindow window(sf::VideoMode(50 * 8, 50 * 8), "Chess");
+    Board board(window);
 
     try
     {
@@ -57,8 +60,17 @@ int main()
             gameInPlay = false;
         }
         
-        while (gameInPlay)
+        while (gameInPlay)///window.isOpen())
         {
+            
+            sf::Event event;
+            while (window.pollEvent(event))
+            {
+                if (event.type == sf::Event::Closed)
+                    window.close();
+            }
+            
+            
             // if it's not my turn yet, I wait for the server
             // to tell me what happens
             // after the server tells me what happens
@@ -151,6 +163,10 @@ int main()
                 Socket.SendTo(IP, PORT, data.c_str(), data.size());
                 isMyTurn = false;
             }
+
+            board.Draw();
+            window.display();
+
         }
 
 

@@ -2,7 +2,6 @@
 #define BOARDSTATE_H
 
 #include "Piece.h"
-#include "Move.cpp"
 #include <map>
 
 

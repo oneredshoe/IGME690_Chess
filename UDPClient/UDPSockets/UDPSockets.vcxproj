@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Move.cpp" />
+    <ClCompile Include="Piece.cpp" />
     <ClCompile Include="UDPSockets.cpp" />
   </ItemGroup>
   <ItemGroup>
