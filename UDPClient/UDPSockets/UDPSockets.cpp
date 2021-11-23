@@ -122,7 +122,7 @@ int main()
 
                     // this gets just the move portion, getting rid of the ID
                     string incomingMove = buffer;
-                    incomingMove = incomingMove.substr(1, 4);
+                    incomingMove = incomingMove.substr(0, 4);
 
                     // now I need to break that into two int array
                     int startPos[2];

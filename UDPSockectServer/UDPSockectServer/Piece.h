@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <cmath> 
+#include <iostream>
 
 /*
 Broad
@@ -39,10 +41,7 @@ public:
 	int* getPosition();
 	bool isBlack();
 
-	
-
-	virtual bool Move(int position[], int board[8][8]);
-	virtual vector<array<int, 2>>PossibleMoves(int board[8][8]);
+	vector<array<int, 2>>PossibleMoves(int board[8][8]);
 	
 protected:
 	PieceType m_name;
@@ -63,9 +62,9 @@ Piece::Piece(PieceType name, int x, int y, bool isBlack )
 
 Piece::Piece()
 {
-	m_name = PAWN;
-	m_position[0] = 0;
-	m_position[1] = 0;
+	m_name = NONE;
+	m_position[0] = -1;
+	m_position[1] = -1;
 	m_isBlack = false;
 }
 
@@ -182,20 +181,120 @@ bool Piece::isBlack() {
 	 return retVal;
 }
 
-bool Piece::Move(int position[], int board[8][8]) {
-	vector <array<int, 2>> check = PossibleMoves(board);
-
-	for (array<int, 2> possibility : check) {
-		if (position[0] == possibility[0] && position[1] == possibility[1]) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
 vector<array<int, 2>> Piece::PossibleMoves(int board[8][8])
 {
+	vector<array<int, 2>> retVal;
+	switch (m_name) {
+	case HORSE:
+	{
+		if (m_position[0] + 2 < 8) {
+			if (m_position[1] + 1 < 8 && board[m_position[0] + 2][m_position[1] + 1] != (int)m_isBlack) retVal.push_back({ m_position[0] + 2, m_position[1] + 1 });
+			if (m_position[1] - 1 >= 0 && board[m_position[0] + 2][m_position[1] - 1] != (int)m_isBlack) retVal.push_back({ m_position[0] + 2, m_position[1] - 1 });
+		}
+
+		if (m_position[0] - 2 >= 0) {
+			if (m_position[1] + 1 < 8 && board[m_position[0] - 2][m_position[1] + 1] != (int)m_isBlack) retVal.push_back({ m_position[0] - 2, m_position[1] + 1 });
+			if (m_position[1] - 1 >= 0 && board[m_position[0] - 2][m_position[1] - 1] != (int)m_isBlack) retVal.push_back({ m_position[0] - 2, m_position[1] - 1 });
+		}
+
+		if (m_position[1] + 2 < 8) {
+			if (m_position[0] + 1 < 8 && board[m_position[0] + 1][m_position[1] + 2] != (int)m_isBlack) retVal.push_back({ m_position[0] + 1, m_position[1] + 2 });
+			if (m_position[0] - 1 >= 0 && board[m_position[0] - 1][m_position[1] + 2] != (int)m_isBlack) retVal.push_back({ m_position[0] - 1, m_position[1] + 2 });
+		}
+
+		if (m_position[1] - 2 >= 0) {
+			if (m_position[0] + 1 < 8 && board[m_position[0] + 1][m_position[1] - 2] != (int)m_isBlack) retVal.push_back({ m_position[0] + 1, m_position[1] - 2 });
+			if (m_position[0] - 1 >= 0 && board[m_position[0] - 1][m_position[1] - 2] != (int)m_isBlack) retVal.push_back({ m_position[0] - 1, m_position[1] - 2 });
+		}
+
+		return retVal;
+		break;
+	}
+	case CASTLE:
+	{
+		return CheckSides(board);
+		break;
+	}
+	case BISHOP:
+	{
+		return CheckDiagonals(board);
+		break;
+	}
+	case PAWN:
+	{
+		int multiplier = 1;
+		if (!m_isBlack) multiplier = -1;
+
+		bool hasMoved = false;
+		if ((m_isBlack && m_position[0] != 1) || (!m_isBlack && m_position[0] != 6)) {
+			hasMoved = true;
+		}
+
+		//make sure not at the dge of the board
+		if (m_position[0] + multiplier >= 8 || m_position[0] + multiplier < 0) {
+			return retVal;
+		}
+
+		//see if u can move forward
+		if (board[m_position[0] + multiplier][m_position[1]] == 2) {
+			retVal.push_back({ m_position[0] + multiplier, m_position[1] });
+			if (!hasMoved && board[m_position[0] + multiplier * 2][m_position[1]] == 2 && m_position[0] + multiplier * 2 < 8 && m_position[0] + multiplier * 2 >= 0) {
+				retVal.push_back({ m_position[0] + multiplier * 2, m_position[1] });
+			}
+		}
+
+		//see if u can attack
+		if (m_position[1] + 1 < 8 && m_position[1] + 1 >= 0 && board[m_position[0] + multiplier][m_position[1] + 1] == (int)!m_isBlack) {
+			retVal.push_back({ m_position[0] + multiplier, m_position[1] + 1 });
+		}
+
+		if (m_position[1] - 1 < 8 && m_position[1] - 1 >= 0 && board[m_position[0] + multiplier][m_position[1] - 1] == (int)!m_isBlack) {
+			retVal.push_back({ m_position[0] + multiplier, m_position[1] - 1 });
+		}
+		return retVal;
+		break;
+	}
+	case QUEEN:
+	{
+		vector<array<int, 2>> sides = CheckSides(board);
+		vector<array<int, 2>> diagonals = CheckDiagonals(board);
+		retVal.reserve(sides.size() + diagonals.size());
+		retVal.insert(retVal.end(), sides.begin(), sides.end());
+		retVal.insert(retVal.end(), diagonals.begin(), diagonals.end());
+
+		return retVal;
+		break;
+	}
+	case KING:
+	{
+		int posY = m_position[0] + 1;
+		int posX = m_position[1] + 1;
+
+		int negY = m_position[0] - 1;
+		int negX = m_position[1] - 1;
+
+		if (posX < 8) {
+			if (board[m_position[0]][posX] != (int)m_isBlack) retVal.push_back({ m_position[0], posX });
+			if (posY < 8 && board[posY][posX] != (int)m_isBlack) retVal.push_back({ posY, posX });
+		}
+		if (negX >= 0) {
+			if (board[m_position[0]][negX] != (int)m_isBlack) retVal.push_back({ m_position[0], negX });
+			if (negY >= 0 && board[negY][negX] != (int)m_isBlack) retVal.push_back({ negY, negX });
+		}
+
+		if (posY < 8) {
+			if (board[posY][m_position[1]] != (int)m_isBlack) retVal.push_back({ posY, m_position[1] });
+			if (negX >= 0 && board[posY][negX] != (int)m_isBlack) retVal.push_back({ posY, negX });
+		}
+		if (negY >= 0) {
+			if (board[negY][m_position[1]] != (int)m_isBlack) retVal.push_back({ negY, m_position[1] });
+			if (posX < 8 && board[negY][posX] != (int)m_isBlack) retVal.push_back({ negY, posX });
+		}
+
+		return retVal;
+		break;
+	}
+	}
 	return vector<array<int, 2>>();
 }
 
@@ -205,7 +304,6 @@ vector<array<int, 2>> Piece::PossibleMoves(int board[8][8])
 class Horse : public Piece {
 public:
 	Horse(int x, int y, bool isBlack);
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
 };
 
 Horse::Horse(int x, int y, bool isBlack) : Piece(HORSE, x, y, isBlack) {}
@@ -252,7 +350,6 @@ Horse::Horse(int x, int y, bool isBlack) : Piece(HORSE, x, y, isBlack) {}
 class King : public Piece {
 public:
 	King(int x, int y, bool isBlack);
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
 };
 
 King::King(int x, int y, bool isBlack) : Piece(KING, x, y, isBlack) {}
@@ -310,7 +407,6 @@ King::King(int x, int y, bool isBlack) : Piece(KING, x, y, isBlack) {}
 class Queen : public Piece {
 public:
 	Queen(int x, int y, bool isBlack);
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
 };
 
 Queen::Queen(int x, int y, bool isBlack) : Piece(QUEEN, x, y, isBlack) {}
@@ -368,7 +464,6 @@ Queen::Queen(int x, int y, bool isBlack) : Piece(QUEEN, x, y, isBlack) {}
 class Bishop : public Piece {
 public:
 	Bishop(int x, int y, bool isBlack);
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
 };
 
 Bishop::Bishop(int x, int y, bool isBlack) : Piece(BISHOP, x, y, isBlack) {}
@@ -429,7 +524,6 @@ Bishop::Bishop(int x, int y, bool isBlack) : Piece(BISHOP, x, y, isBlack) {}
 class Castle : public Piece {
 public:
 	Castle(int x, int y, bool isBlack);
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
 };
 
 Castle::Castle(int x, int y, bool isBlack) : Piece(CASTLE, x, y, isBlack) {}
@@ -490,16 +584,9 @@ class Pawn : public Piece
 {
 public:
 	Pawn(int x, int y, bool isBlack);
-	bool Move(int position[], int board[8][8]) override;
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
-
-private:
-	bool m_hasMoved;
 };
 
-Pawn::Pawn(int x, int y, bool isBlack) : Piece(PAWN, x, y, isBlack) {
-	m_hasMoved = false;
-}
+Pawn::Pawn(int x, int y, bool isBlack) : Piece(PAWN, x, y, isBlack) {}
 
 /*
 *			//Corner of square that piece is on
@@ -566,6 +653,5 @@ Pawn::Pawn(int x, int y, bool isBlack) : Piece(PAWN, x, y, isBlack) {
 			window.draw(p_Bottom);
 
 */
-
 
 #endif // !PIECE_H
