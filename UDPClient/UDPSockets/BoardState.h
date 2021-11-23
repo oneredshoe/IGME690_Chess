@@ -7,7 +7,7 @@
 #ifndef BOARDSTATE_H
 #define BOARDSTATE_H
 
-#include "Piece.h"
+#include "Piece.cpp"
 #include <map>
 
 
@@ -16,10 +16,10 @@ class BoardState
 public:
 	BoardState(sf::RenderWindow& win);
 	~BoardState();
-	bool movePiece(int startPos[], int endPos[]);
 	bool getGameOver();
 	bool getWinner();
 	void DrawPieces();
+	void movePiece(int* startPos, int* endPos);
 
 private:
 	int m_board[8][8];
@@ -51,7 +51,7 @@ private:
 
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 8; j++) {
-			m_board[i][j] = 1;
+			m_board[i][j] = 0;
 		}
 	}
 
@@ -104,62 +104,6 @@ private:
 
 }
 
-/// <summary>
-/// move a piece and will switch turns if the move is successfull
-/// </summary>
-/// <param name="startPos"></param>
-/// <param name="endPos"></param>
-/// <returns></returns>
-bool BoardState::movePiece(int startPos[], int endPos[]) {
-	//make sure piece is correct turn
-	if (m_board[startPos[0]][startPos[1]] != (int)isBlackTurn) {
-		return false;
-	}
-
-	int endPosValue = m_board[endPos[0]][endPos[1]];
-
-	bool moved = m_pieces[startPos[0] * 8 + startPos[1]].Move(endPos, m_board);
-
-	if (!moved) {
-		return false;
-	}
-
-	if (endPosValue != 2) {
-		if (blackKingPos[0] == endPos[0] && blackKingPos[1] == endPos[1]) {
-			didBlackWin = false;
-			gameOver = true;
-		}
-
-		if (whiteKingPos[0] == endPos[0] && whiteKingPos[1] == endPos[1]) {
-			didBlackWin = true;
-			gameOver = true;
-		}
-
-		
-		m_pieces[endPos[0] * 8 + endPos[1]] = m_pieces[startPos[0] * 8 + startPos[1]];
-
-		m_pieces.erase(startPos[0] * 8 + startPos[1]);
-
-		//see if we have to update the king pos
-		if (m_pieces[endPos[0] * 8 + endPos[1]].getName() == KING) {
-			if (isBlackTurn) {
-				blackKingPos[0] = endPos[0];
-				blackKingPos[1] = endPos[1];
-			}else{
-				whiteKingPos[0] = endPos[0];
-				whiteKingPos[1] = endPos[1];
-			}
-		}
-		
-	}
-
-
-
-	isBlackTurn = !isBlackTurn;
-
-	return true;
-
-}
 
 bool BoardState::getGameOver()
 {
@@ -180,11 +124,13 @@ inline void BoardState::DrawPieces()
 
 }
 
+void BoardState::movePiece(int* startPos, int* endPos) {
+	m_pieces.insert(make_pair(endPos[0] * 8 + endPos[1], m_pieces[startPos[0] * 8 + startPos[1]]));
+	m_pieces.erase(startPos[0] * 8 + startPos[1]);
+}
+
 BoardState::~BoardState()
 {
 }
-
-
-
 
 #endif

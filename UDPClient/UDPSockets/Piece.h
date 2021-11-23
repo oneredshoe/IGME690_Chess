@@ -47,10 +47,6 @@ public:
 	bool isBlack();
 	int getGlobalMultiplier();
 
-	
-
-	virtual bool Move(int position[], int board[8][8]);
-	virtual vector<array<int, 2>>PossibleMoves(int board[8][8]);
 	virtual void Draw();
 	
 protected:
@@ -58,52 +54,43 @@ protected:
 	int m_position[2]{0, 0};
 	bool m_isBlack;
 	sf::RenderWindow& m_window;
-	vector<array<int, 2>> CheckSides( int board[8][8]);
-	vector<array<int, 2>> CheckDiagonals(int board[8][8]);
+	
 };
+
 
 class Horse : public Piece {
 public:
 	Horse(int x, int y, bool isBlack, sf::RenderWindow& win);
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
+
 	void Draw();
 };
 class King : public Piece {
 public:
 	King(int x, int y, bool isBlack, sf::RenderWindow& win);
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
 	void Draw();
 };
 
 class Queen : public Piece {
 public:
-	Queen(int x, int y, bool isBlack, sf::RenderWindow& win);
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
+	 Queen(int x, int y, bool isBlack, sf::RenderWindow& win);
 	void Draw();
 };
 class Bishop : public Piece {
 public:
 	Bishop(int x, int y, bool isBlack, sf::RenderWindow& win);
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
 	void Draw();
 };
 
 class Castle : public Piece {
 public:
 	Castle(int x, int y, bool isBlack, sf::RenderWindow& win);
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
 	void Draw();
 };
 class Pawn : public Piece
 {
 public:
 	Pawn(int x, int y, bool isBlack, sf::RenderWindow& win);
-	bool Move(int position[], int board[8][8]) override;
-	vector<array<int, 2>>PossibleMoves(int board[8][8]) override;
 	void Draw();
-
-private:
-	bool m_hasMoved;
 };
 
 #endif // !PIECE_H

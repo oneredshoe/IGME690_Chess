@@ -11,6 +11,7 @@ Piece::Piece(PieceType name, int x, int y, bool isBlack, sf::RenderWindow& win) 
 
 }
 
+
 Piece::Piece(sf::RenderWindow& win) : m_window(win)
 {
 	m_name = PAWN;
@@ -43,118 +44,6 @@ int Piece::getGlobalMultiplier()
 
 
 
-vector<array<int, 2>> Piece::CheckSides(int board[8][8])
-{
-	vector<array<int, 2>> retVal;
-
-	for (int i = m_position[0] + 1; i < 8; i++) {
-		if (board[i][m_position[1]] == 2) {
-			retVal.push_back({ i, m_position[1] });
-		}
-		else if (board[i][m_position[1]] != (int)m_isBlack) {
-			retVal.push_back({ i, m_position[1] });
-			break;
-		}
-	}
-
-	for (int i = m_position[0] - 1; i >= 0; i--) {
-		if (board[i][m_position[1]] == 2) {
-			retVal.push_back({ i, m_position[1] });
-		}
-		else if (board[i][m_position[1]] != (int)m_isBlack) {
-			retVal.push_back({ i, m_position[1] });
-			break;
-		}
-	}
-
-	for (int i = m_position[1] + 1; i < 8; i++) {
-		if (board[m_position[0]][i] == 2) {
-			retVal.push_back({ m_position[0], i });
-		}
-		else if (board[m_position[0]][i] != (int)m_isBlack) {
-			retVal.push_back({ m_position[0], i });
-			break;
-		}
-	}
-
-	for (int i = m_position[1] - 1; i >= 0; i--) {
-		if (board[m_position[0]][i] == 2) {
-			retVal.push_back({ m_position[0], i });
-		}
-		else if (board[m_position[0]][i] != (int)m_isBlack) {
-			retVal.push_back({ m_position[0], i });
-			break;
-		}
-	}
-
-	return retVal;
-}
-
-vector<array<int, 2>> Piece::CheckDiagonals(int board[8][8])
-{
-	vector<array<int, 2>> retVal;
-
-	bool first = true, second = true, third = true, forth = true;
-
-	for (int i = 1; i < 8; i++) {
-
-		if (first && m_position[0] + i < 8 && m_position[1] + i < 8) {
-			if (board[m_position[0] + i][m_position[1] + i] != (int)m_isBlack) {
-				retVal.push_back({ m_position[0] + i , m_position[1] + i });
-			}
-			else {
-				first = false;
-			}
-		}
-
-		if (second && m_position[0] + i < 8 && m_position[1] - i >= 0) {
-			if (board[m_position[0] + i][m_position[1] - i] != (int)m_isBlack) {
-				retVal.push_back({ m_position[0] + i , m_position[1] - i });
-			}
-			else {
-				second = false;
-			}
-		}
-
-		if (third && m_position[0] - i < 8 && m_position[1] - i >= 0) {
-			if (board[m_position[0] - i][m_position[1] - i] != (int)m_isBlack) {
-				retVal.push_back({ m_position[0] - i , m_position[1] - i });
-			}
-			else {
-				third = false;
-			}
-		}
-
-		if (forth && m_position[0] - i < 8 && m_position[1] + i >= 0) {
-			if (board[m_position[0] - i][m_position[1] + i] != (int)m_isBlack) {
-				retVal.push_back({ m_position[0] + i , m_position[1] - i });
-			}
-			else {
-				forth = false;
-			}
-		}
-
-	}
-
-	return retVal;
-}
-
-bool Piece::Move(int position[], int board[8][8]) {
-	vector <array<int, 2>> check = PossibleMoves(board);
-
-	for (array<int, 2> possibility : check) {
-		if (position[0] == possibility[0] && position[1] == possibility[1]) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-vector<array<int, 2>> Piece::PossibleMoves(int board[8][8])
-{
-	return vector<array<int, 2>>();
-}
 
 void Piece::Draw()
 {
@@ -191,7 +80,7 @@ void Horse::Draw()
 	horse.setPoint(12, sf::Vector2f(2, 24));
 	horse.setPoint(13, sf::Vector2f(6, 14));
 
-	if (isBlack)
+	if (m_isBlack)
 	{
 		horse.setFillColor(sf::Color::Black);
 	}
@@ -239,7 +128,7 @@ void King::Draw()
 	king.setPoint(20, sf::Vector2f(9, 5));
 
 
-	if (isBlack)
+	if (m_isBlack)
 	{
 		king.setFillColor(sf::Color::Black);
 	}
@@ -293,7 +182,7 @@ void Queen::Draw()
 	queen.setPoint(21, sf::Vector2f(16, 0));
 	queen.setPoint(22, sf::Vector2f(13, 3));
 
-	if (isBlack)
+	if (m_isBlack)
 	{
 		queen.setFillColor(sf::Color::Black);
 	}
@@ -323,7 +212,7 @@ void Bishop::Draw()
 	sf::CircleShape b_Head(b_HeadHeight);
 	sf::RectangleShape b_Body(sf::Vector2f(5, b_BodyHeight));
 	sf::RectangleShape b_Base(sf::Vector2f(13, 5));
-	if (isBlack)
+	if (m_isBlack)
 	{
 		b_Top.setFillColor(sf::Color::Black);
 		b_Head.setFillColor(sf::Color::Black);
@@ -380,7 +269,7 @@ void Castle::Draw()
 	sf::RectangleShape r_Head(sf::Vector2f(8, r_HeadHeight));
 	sf::RectangleShape r_Body(sf::Vector2f(5, r_BodyHeight));
 	sf::RectangleShape r_Base(sf::Vector2f(15, 5));
-	if (isBlack)
+	if (m_isBlack)
 	{
 		r_Top.setFillColor(sf::Color::Black);
 		r_Head.setFillColor(sf::Color::Black);
@@ -418,7 +307,6 @@ void Castle::Draw()
 
 
 Pawn::Pawn(int x, int y, bool isBlack, sf::RenderWindow& win) : Piece(PAWN, x, y, isBlack, win) {
-	m_hasMoved = false;
 }
 void Pawn::Draw()
 {
@@ -443,7 +331,7 @@ void Pawn::Draw()
 
 	//outlines are needed if we keep the game only 2 colors
 	//textures can be put in later
-	if (isBlack)
+	if (m_isBlack)
 	{
 		p_Top.setFillColor(sf::Color::Black);
 		p_Hat.setFillColor(sf::Color::Black);

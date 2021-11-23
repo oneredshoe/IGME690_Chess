@@ -7,7 +7,6 @@
 #include "Network.h"
 #include "iostream"
 #include "BoardState.h"
-#include "Piece.h"
 #include "Board.h"
 
 
