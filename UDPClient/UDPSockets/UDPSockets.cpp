@@ -136,7 +136,11 @@ int main()
 
                     // now you send it through your board to update it
                     // the move is already validated by the server
+                    
                     m_boardState.movePiece(startPos, endPos);
+
+                    board.Draw();
+                    m_boardState.DrawPieces();
 
                     isMyTurn = true;
                 }
@@ -162,10 +166,14 @@ int main()
 
                 // when it is my turn, i send my move to the server
                 Socket.SendTo(IP, PORT, data.c_str(), data.size());
+
+                board.Draw(); 
+                m_boardState.DrawPieces();
+
                 isMyTurn = false;
             }
 
-            board.Draw();
+            
             window.display();
 
         }

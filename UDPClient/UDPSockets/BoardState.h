@@ -19,6 +19,7 @@ public:
 	bool movePiece(int startPos[], int endPos[]);
 	bool getGameOver();
 	bool getWinner();
+	void DrawPieces();
 
 private:
 	int m_board[8][8];
@@ -152,6 +153,8 @@ bool BoardState::movePiece(int startPos[], int endPos[]) {
 		
 	}
 
+
+
 	isBlackTurn = !isBlackTurn;
 
 	return true;
@@ -168,8 +171,20 @@ bool BoardState::getWinner() {
 	return didBlackWin;
 }
 
+inline void BoardState::DrawPieces()
+{
+	for (auto iter = m_pieces.begin(); iter != m_pieces.end(); ++iter)
+	{
+		iter->second.Draw();
+	}
+
+}
+
 BoardState::~BoardState()
 {
 }
+
+
+
 
 #endif

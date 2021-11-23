@@ -5,6 +5,8 @@
 #include <vector>
 #include <array>
 
+#include <iostream>
+
 using namespace std;
 
 vector<array<int, 2>> Queen::PossibleMoves(int board[8][8])
