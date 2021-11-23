@@ -19,8 +19,9 @@ int main()
     bool gameInPlay = true;
     bool isMyTurn;
 
-    BoardState m_boardState = BoardState();
+    
     sf::RenderWindow window(sf::VideoMode(50 * 8, 50 * 8), "Chess");
+    BoardState m_boardState = BoardState(window);
     Board board(window);
 
     try
