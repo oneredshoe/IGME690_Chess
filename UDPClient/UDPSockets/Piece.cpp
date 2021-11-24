@@ -1,24 +1,35 @@
 #pragma once
 #include "Piece.h"
 
-Piece::Piece(PieceType name, int x, int y, bool isBlack, sf::RenderWindow& win) : m_window(win)
+Piece::Piece(PieceType name, int x, int y, bool isBlack, sf::RenderWindow* win)
 {
 	m_name = name;
 
 	m_position[0] = x;
 	m_position[1] = y;
 	m_isBlack = isBlack;
-
+	m_window = win;
 }
 
 
-Piece::Piece(sf::RenderWindow& win) : m_window(win)
+Piece::Piece(sf::RenderWindow* win)
 {
 	m_name = PAWN;
 	m_position[0] = 0;
 	m_position[1] = 0;
 	m_isBlack = false;
+	m_window = win;
 }
+
+Piece::Piece() //: m_window(sf::RenderWindow(sf::VideoMode(50 * 8, 50 * 8), "Chess"))
+{
+	m_name = PAWN;
+	m_position[0] = 0;
+	m_position[1] = 0;
+	m_isBlack = false;
+	m_window = nullptr;
+	//m_window.create(sf::RenderWindow(sf::VideoMode(50 * 8, 50 * 8), "Chess"));
+} //nulptr
 
 Piece::~Piece()
 {
@@ -54,7 +65,7 @@ void Piece::Draw()
 
 
 
-Horse::Horse(int x, int y, bool isBlack, sf::RenderWindow& win) : Piece(HORSE, x, y, isBlack, win) {}
+Horse::Horse(int x, int y, bool isBlack, sf::RenderWindow* win) : Piece(HORSE, x, y, isBlack, win) {}
 void Horse::Draw()
 {
 	sf::ConvexShape horse;
@@ -89,10 +100,10 @@ void Horse::Draw()
 		horse.setFillColor(sf::Color::White);
 	}
 	horse.setPosition(origin[0] += 10, origin[1] += 10);
-	m_window.draw(horse);
+	m_window->draw(horse);
 }
 
-King::King(int x, int y, bool isBlack, sf::RenderWindow& win) : Piece(KING, x, y, isBlack, win) {}
+King::King(int x, int y, bool isBlack, sf::RenderWindow* win) : Piece(KING, x, y, isBlack, win) {}
 void King::Draw()
 {
 	int origin[2];
@@ -138,12 +149,12 @@ void King::Draw()
 	}
 
 	king.setPosition(origin[0] + 10, origin[1] + 10);
-	m_window.draw(king);
+	m_window->draw(king);
 }
 
 
 
-Queen::Queen(int x, int y, bool isBlack, sf::RenderWindow& win) : Piece(QUEEN, x, y, isBlack, win) {}
+Queen::Queen(int x, int y, bool isBlack, sf::RenderWindow* win) : Piece(QUEEN, x, y, isBlack, win) {}
 void Queen::Draw()
 {
 	int origin[2];
@@ -192,12 +203,12 @@ void Queen::Draw()
 	}
 
 	queen.setPosition(origin[0] + 10, origin[1] + 10);
-	m_window.draw(queen);
+	m_window->draw(queen);
 }
 
 
 
-Bishop::Bishop(int x, int y, bool isBlack, sf::RenderWindow& win) : Piece(BISHOP, x, y, isBlack, win) {}
+Bishop::Bishop(int x, int y, bool isBlack, sf::RenderWindow* win) : Piece(BISHOP, x, y, isBlack, win) {}
 void Bishop::Draw()
 {
 	int origin[2];
@@ -243,16 +254,16 @@ void Bishop::Draw()
 	b_Base.setPosition(origin[0] -= b_TopHeight * 1.1, origin[1] += b_BodyHeight);
 
 
-	m_window.draw(b_Top);
-	m_window.draw(b_Head);
-	m_window.draw(b_Body);
-	m_window.draw(b_Base);
+	m_window->draw(b_Top);
+	m_window->draw(b_Head);
+	m_window->draw(b_Body);
+	m_window->draw(b_Base);
 }
 
 
 
 
-Castle::Castle(int x, int y, bool isBlack, sf::RenderWindow& win) : Piece(CASTLE, x, y, isBlack, win) {}
+Castle::Castle(int x, int y, bool isBlack, sf::RenderWindow* win) : Piece(CASTLE, x, y, isBlack, win) {}
 void Castle::Draw()
 {
 	int origin[2];
@@ -299,14 +310,14 @@ void Castle::Draw()
 	r_Body.setPosition(origin[0] += 1.5f, origin[1] += r_HeadHeight);
 	r_Base.setPosition(origin[0] -= 4.5f, origin[1] += r_BodyHeight);
 
-	m_window.draw(r_Top);
-	m_window.draw(r_Head);
-	m_window.draw(r_Body);
-	m_window.draw(r_Base);
+	m_window->draw(r_Top);
+	m_window->draw(r_Head);
+	m_window->draw(r_Body);
+	m_window->draw(r_Base);
 }
 
 
-Pawn::Pawn(int x, int y, bool isBlack, sf::RenderWindow& win) : Piece(PAWN, x, y, isBlack, win) {
+Pawn::Pawn(int x, int y, bool isBlack, sf::RenderWindow* win) : Piece(PAWN, x, y, isBlack, win) {
 }
 void Pawn::Draw()
 {
@@ -367,10 +378,10 @@ void Pawn::Draw()
 	p_Bottom.setPosition(origin[0] -= 1, origin[1] += p_BaseHeight);
 
 
-	m_window.draw(p_Top);
-	m_window.draw(p_Hat);
-	m_window.draw(p_Body);
-	m_window.draw(p_Base);
-	m_window.draw(p_Bottom);
+	m_window->draw(p_Top);
+	m_window->draw(p_Hat);
+	m_window->draw(p_Body);
+	m_window->draw(p_Base);
+	m_window->draw(p_Bottom);
 }
 

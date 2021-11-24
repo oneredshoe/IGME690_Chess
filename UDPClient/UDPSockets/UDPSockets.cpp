@@ -1,11 +1,11 @@
 #pragma once
-#define SFML_Static
+#define SFML_STATIC
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
 
 #include "Network.h"
-#include "iostream"
+#include <iostream>
 #include "BoardState.h"
 #include "Board.h"
 

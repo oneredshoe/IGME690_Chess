@@ -1,13 +1,9 @@
-#pragma once
-#define SFML_Static
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
-
-
 #ifndef BOARDSTATE_H
 #define BOARDSTATE_H
-
-#include "Piece.cpp"
+#define SFML_STATIC
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include "Piece.h"
 #include <map>
 
 
@@ -63,38 +59,38 @@ private:
 
 	//pawns
 	for (int i = 8; i < 16; i++) {
-		m_pieces.insert(make_pair(i, Pawn(1, i, true, m_window)));
-		m_pieces.insert(make_pair(48 + i, Pawn(6, i, false, m_window)));
+		m_pieces.insert(make_pair(i, Pawn(1, i, true, &m_window)));
+		m_pieces.insert(make_pair(48 + i, Pawn(6, i, false, &m_window)));
 	}
 
 	//CASTLE
-	m_pieces.insert(make_pair(0, Castle(0, 0, true, m_window)));
-	m_pieces.insert(make_pair(7, Castle(0, 7, true, m_window)));
+	m_pieces.insert(make_pair(0, Castle(0, 0, true, &m_window)));
+	m_pieces.insert(make_pair(7, Castle(0, 7, true, &m_window)));
 
-	m_pieces.insert(make_pair(56, Castle(7, 0, false, m_window)));
-	m_pieces.insert(make_pair(63, Castle(7, 7, false, m_window)));
+	m_pieces.insert(make_pair(56, Castle(7, 0, false, &m_window)));
+	m_pieces.insert(make_pair(63, Castle(7, 7, false, &m_window)));
 
 	//horse
-	m_pieces.insert(make_pair(1, Horse(0, 1, true, m_window)));
-	m_pieces.insert(make_pair(6, Horse(0, 6, true, m_window)));
+	m_pieces.insert(make_pair(1, Horse(0, 1, true, &m_window)));
+	m_pieces.insert(make_pair(6, Horse(0, 6, true, &m_window)));
 
-	m_pieces.insert(make_pair(57, Horse(7, 1, false, m_window)));
-	m_pieces.insert(make_pair(62, Horse(7, 6, false, m_window)));
+	m_pieces.insert(make_pair(57, Horse(7, 1, false, &m_window)));
+	m_pieces.insert(make_pair(62, Horse(7, 6, false, &m_window)));
 
 	//bishop
-	m_pieces.insert(make_pair(2, Bishop(0, 2, true, m_window)));
-	m_pieces.insert(make_pair(6, Bishop(0, 5, true, m_window)));
+	m_pieces.insert(make_pair(2, Bishop(0, 2, true, &m_window)));
+	m_pieces.insert(make_pair(6, Bishop(0, 5, true, &m_window)));
 
-	m_pieces.insert(make_pair(58, Bishop(7, 2, false, m_window)));
-	m_pieces.insert(make_pair(61, Bishop(7, 5, false, m_window)));
+	m_pieces.insert(make_pair(58, Bishop(7, 2, false, &m_window)));
+	m_pieces.insert(make_pair(61, Bishop(7, 5, false, &m_window)));
 
 	//queen
-	m_pieces.insert(make_pair(3, Queen(0, 3, true, m_window)));
-	m_pieces.insert(make_pair(59, Queen(7, 3, false, m_window)));
+	m_pieces.insert(make_pair(3, Queen(0, 3, true, &m_window)));
+	m_pieces.insert(make_pair(59, Queen(7, 3, false, &m_window)));
 
 	//king
-	m_pieces.insert(make_pair(4, King(0, 4, true, m_window)));
-	m_pieces.insert(make_pair(60, King(7, 4, false, m_window)));
+	m_pieces.insert(make_pair(4, King(0, 4, true, &m_window)));
+	m_pieces.insert(make_pair(60, King(7, 4, false, &m_window)));
 
 	whiteKingPos[0] = 7;
 	whiteKingPos[1] = 4;

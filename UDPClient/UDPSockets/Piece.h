@@ -1,10 +1,12 @@
 #pragma once
-#define SFML_Static
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
 
 #ifndef PIECE_H
 #define PIECE_H
+#define SFML_STATIC
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+
+
 
 
 #include <string>
@@ -39,8 +41,9 @@ enum Letters {A = 0, B = 1, C = 2, D = 3, E = 4, F = 5, G = 6, H = 7};
 class Piece
 {
 public:
-	Piece(PieceType name, int x, int y, bool isBlack, sf::RenderWindow& win);
-	Piece(sf::RenderWindow& win);
+	Piece(PieceType name, int x, int y, bool isBlack, sf::RenderWindow* win);
+	Piece(sf::RenderWindow* win);
+	Piece();
 	~Piece();
 	PieceType getName();
 	int* getPosition();
@@ -53,43 +56,43 @@ protected:
 	PieceType m_name;
 	int m_position[2]{0, 0};
 	bool m_isBlack;
-	sf::RenderWindow& m_window;
+	sf::RenderWindow* m_window;
 	
 };
 
 
 class Horse : public Piece {
 public:
-	Horse(int x, int y, bool isBlack, sf::RenderWindow& win);
+	Horse(int x, int y, bool isBlack, sf::RenderWindow* win);
 
 	void Draw();
 };
 class King : public Piece {
 public:
-	King(int x, int y, bool isBlack, sf::RenderWindow& win);
+	King(int x, int y, bool isBlack, sf::RenderWindow* win);
 	void Draw();
 };
 
 class Queen : public Piece {
 public:
-	 Queen(int x, int y, bool isBlack, sf::RenderWindow& win);
+	 Queen(int x, int y, bool isBlack, sf::RenderWindow* win);
 	void Draw();
 };
 class Bishop : public Piece {
 public:
-	Bishop(int x, int y, bool isBlack, sf::RenderWindow& win);
+	Bishop(int x, int y, bool isBlack, sf::RenderWindow* win);
 	void Draw();
 };
 
 class Castle : public Piece {
 public:
-	Castle(int x, int y, bool isBlack, sf::RenderWindow& win);
+	Castle(int x, int y, bool isBlack, sf::RenderWindow* win);
 	void Draw();
 };
 class Pawn : public Piece
 {
 public:
-	Pawn(int x, int y, bool isBlack, sf::RenderWindow& win);
+	Pawn(int x, int y, bool isBlack, sf::RenderWindow* win);
 	void Draw();
 };
 
