@@ -2,6 +2,7 @@
 #include "iostream"
 #include <vector>
 #include "BoardState.h"
+#include <time.h>
 #define SFML_STATIC
 
 
@@ -14,6 +15,15 @@ int main()
     int PORT = 8888;
 
     BoardState m_boardState = BoardState();
+
+    // starter time
+    time_t start = time(0);
+    time_t timeStamp = time(NULL);
+    double timeDiffSec = -1;
+
+    // time variables for each player
+    double timeLeftWhite = 900.0;
+    double timeLeftBlack = 900.0;
 
     try
     {
@@ -67,7 +77,7 @@ int main()
                     data = "1";
                     Socket.SendTo(clients[1], data.c_str(), data.size());
 
-                    std::cout << "Starting game" << std::endl;
+                    std::cout << "Starting game. You get 15 minutes (900 seconds) total." << std::endl;
                     hasGameStarted = true;
                 }
             }
@@ -75,6 +85,50 @@ int main()
             std::cout << "Data Transmitted: ";
             sockaddr_in temp = Socket.RecvFrom(buffer, sizeof(buffer));
             std::cout << buffer << std::endl;
+
+            // everything to do with time
+            // after i recieve a move, timeStamp it.
+            // then get diff between timestamp and start or timestamp and previous timestamp
+            // then subtract that diff from the appropriate player
+            // then logic for if they ran out of time
+
+            // if the time diff is -1, then base off start, else use time stamp
+            if (timeDiffSec == -1)
+            {
+                timeDiffSec = difftime(time(0), start);
+            }
+            else
+            {
+                timeDiffSec = difftime(time(0), timeStamp);
+            }
+            
+            // get timeStamp
+            timeStamp = time(0);
+
+            // now do the math for the player
+
+            // white
+            if (buffer[0] == 0)
+            {
+                // subtract the difference from the remaining time
+                timeLeftWhite -= timeDiffSec;
+                // if new remaining is less than 0, they resign
+                if (timeLeftWhite <= 0.0)
+                {
+                    buffer[1] = 'R';
+                }
+            }
+            // black
+            else
+            {
+                // subtract difference from time remaining
+                timeLeftBlack -= timeDiffSec;
+                // if new time remaining is less than 0, they resign
+                if (timeLeftBlack <= 0.0)
+                {
+                    buffer[1] = 'R';
+                }
+            }
 
             // here instead of just putting it into the buffer, I go and validate moves
             // if the move is valid, I just send it to the next player and we're good
