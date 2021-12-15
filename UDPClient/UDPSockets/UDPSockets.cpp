@@ -10,6 +10,50 @@
 #include "Board.h"
 
 
+char board[8][8];
+
+void drawBoard() {
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8;  j++) {
+            std::cout << board[i][j];
+        }
+        std::cout << std::endl;
+    }
+}
+
+void setUpBoard() {
+    for (int i = 2; i < 6; i++) {
+        for (int j = 0; j < 8; j++) {
+            board[i][j] = '0';
+        }
+    }
+    for (int i = 0; i < 8; i++) {
+        board[1][i] = 'p';
+        board[6][i] = 'P';
+    }
+
+    board[0][0] = 'c';
+    board[0][7] = 'c';
+    board[7][0] = 'C';
+    board[7][7] = 'C';
+
+    board[0][1] = 'h';
+    board[0][6] = 'h';
+    board[7][1] = 'H';
+    board[7][6] = 'H';
+
+    board[0][5] = 'b';
+    board[0][2] = 'b';
+    board[7][5] = 'B';
+    board[7][2] = 'B';
+
+    board[0][4] = 'q';
+    board[7][4] = 'Q';
+
+    board[0][3] = 'k';
+    board[7][3] = 'K';
+    drawBoard();
+}
 
 int main()
 {
@@ -17,11 +61,6 @@ int main()
     int PORT = 8888;
     bool gameInPlay = true;
     bool isMyTurn;
-
-    
-    sf::RenderWindow window(sf::VideoMode(50 * 8, 50 * 8), "Chess");
-    BoardState m_boardState = BoardState(window);
-    Board board(window);
 
     try
     {
@@ -43,12 +82,14 @@ int main()
             isMyTurn = true;
             id = '0';
             std::cout << "I go first" << std::endl;
+            setUpBoard();
         }
         else
         {
             isMyTurn = false;
             id = '1';
             std::cout << "I go second" << std::endl;
+            setUpBoard();
         }
 
         if (id == '0' || id == '1')
@@ -62,13 +103,6 @@ int main()
         
         while (gameInPlay)///window.isOpen())
         {
-            
-            sf::Event event;
-            while (window.pollEvent(event))
-            {
-                if (event.type == sf::Event::Closed)
-                    window.close();
-            }
             
             
             // if it's not my turn yet, I wait for the server
@@ -133,13 +167,12 @@ int main()
                     endPos[0] = stoi(incomingMove.substr(2, 1));
                     endPos[1] = stoi(incomingMove.substr(3, 1));
 
+                    board[endPos[0]][endPos[1]] = board[startPos[0]][startPos[1]];
+                    board[startPos[0]][startPos[1]] = '0';
+
+                    drawBoard();
                     // now you send it through your board to update it
                     // the move is already validated by the server
-                    
-                    m_boardState.movePiece(startPos, endPos);
-
-                    board.Draw();
-                    m_boardState.DrawPieces();
 
                     isMyTurn = true;
                 }
@@ -150,6 +183,7 @@ int main()
             // then it is your turn to give input in the form of move or whatever the server asks for
             if (isMyTurn == true)
             {
+               
                 // it is now my turn and i get data that is my move
                 std::cout << "Enter data to transmit in the format (start location end location) or requested by server: " << std::endl;
                 std::getline(std::cin, data);
@@ -166,14 +200,8 @@ int main()
                 // when it is my turn, i send my move to the server
                 Socket.SendTo(IP, PORT, data.c_str(), data.size());
 
-                board.Draw(); 
-                m_boardState.DrawPieces();
-
                 isMyTurn = false;
             }
-
-            
-            window.display();
 
         }
 
