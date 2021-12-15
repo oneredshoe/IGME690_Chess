@@ -62,7 +62,8 @@ int main()
         
         while (gameInPlay)///window.isOpen())
         {
-            
+            board.Draw();
+            m_boardState.DrawPieces();
             sf::Event event;
             while (window.pollEvent(event))
             {
@@ -138,8 +139,7 @@ int main()
                     
                     m_boardState.movePiece(startPos, endPos);
 
-                    board.Draw();
-                    m_boardState.DrawPieces();
+                    
 
                     isMyTurn = true;
                 }
@@ -150,6 +150,7 @@ int main()
             // then it is your turn to give input in the form of move or whatever the server asks for
             if (isMyTurn == true)
             {
+               
                 // it is now my turn and i get data that is my move
                 std::cout << "Enter data to transmit in the format (start location end location) or requested by server: " << std::endl;
                 std::getline(std::cin, data);
@@ -166,7 +167,7 @@ int main()
                 // when it is my turn, i send my move to the server
                 Socket.SendTo(IP, PORT, data.c_str(), data.size());
 
-                board.Draw(); 
+                board.Draw();
                 m_boardState.DrawPieces();
 
                 isMyTurn = false;
