@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include "Piece.h"
 #include <map>
+#include <iostream>
 
 
 class BoardState
@@ -113,10 +114,13 @@ bool BoardState::getWinner() {
 
 inline void BoardState::DrawPieces()
 {
-	for (auto iter = m_pieces.begin(); iter != m_pieces.end(); ++iter)
-	{
-		iter->second.Draw();
-	}
+	//drawing the pieces won't work properly :(
+	//std::cout << "Draw Pieces!" << std::endl;
+	//for (auto iter = m_pieces.begin(); iter != m_pieces.end(); ++iter)
+	//{
+	//	std::cout << "Next Piece" << std::endl;
+	//	iter->second.Draw();
+	//}
 
 }
 

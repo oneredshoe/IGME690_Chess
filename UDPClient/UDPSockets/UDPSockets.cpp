@@ -105,7 +105,6 @@ int main()
         {
             
             
-            
             // if it's not my turn yet, I wait for the server
             // to tell me what happens
             // after the server tells me what happens
@@ -184,6 +183,7 @@ int main()
             // then it is your turn to give input in the form of move or whatever the server asks for
             if (isMyTurn == true)
             {
+               
                 // it is now my turn and i get data that is my move
                 std::cout << "Enter data to transmit in the format (start location end location) or requested by server: " << std::endl;
                 std::getline(std::cin, data);
